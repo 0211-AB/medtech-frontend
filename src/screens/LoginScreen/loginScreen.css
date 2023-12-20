@@ -1,0 +1,34 @@
+.authWrapper {
+    background: linear-gradient(180deg, #2A3650 0%, #334260 100%);
+    height: 100vh;
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+}
+
+.header {
+    display: flex;
+    justify-content: flex-start;
+    align-self: flex-start;
+    padding: 40px 0 0 50px;
+}
+
+.logo{
+    width: 122px !important;
+    height: 25px !important;
+}
+
+.container {
+    width: 30em;
+    height: 28em;
+    padding: 40px 60px;
+    border-radius: 24px;
+    gap: 10px;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    margin: auto auto;
+    box-shadow: 0px 4px 20px 0px #FFFFFF40;
+    /* justify-content: center; */
+
+}

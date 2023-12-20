@@ -1,0 +1,93 @@
+.loginCardWrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+.loginCardTitle {
+    font-size: 30px;
+    font-weight: 600;
+    font-family: Urbanist;
+    text-align: left;
+    display: block;
+    color: #333333;
+    margin-bottom: 10px;
+    margin-top: 20px;
+}
+
+.title {
+    display: block;
+    font-family: Urbanist;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 19px;
+    letter-spacing: 0em;
+    text-align: left;
+    color: #333333;
+    margin-top: 20px;
+}
+
+.passwordInputWrapper {
+    display: flex;
+    align-items: center;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    background: #fff;
+    margin-top: 5px;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.passwordInputInnerWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    /* Ensure the inner wrapper takes 100% width */
+}
+
+input {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    outline: none;
+    border-radius: 6px;
+    background: #fff;
+
+}
+
+.eye-icon {
+    /* padding: 10px; */
+    cursor: pointer;
+}
+
+.emailInput {
+    border: 1px solid #cbd5e1;
+    width: 100%;
+    /* padding:5px; */
+}
+
+svg {
+    width: 20px !important;
+    height: 20px !important;
+    margin-right: 20px;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.loginButton {
+    width: 100%;
+    height: 40px;
+    padding: 8px 16px;
+    border-radius: 6px;
+    gap: 10px;
+    background: linear-gradient(90deg, #6E75FF 0%, #C66EFF 100%);
+    color: rgba(255, 255, 255, 1);
+    font-family: Urbanist;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 24px;
+    letter-spacing: 0em;
+    text-align: center;
+    margin-top: 30px;
+
+}
