@@ -1,7 +1,7 @@
 import React from 'react';
 import './loginScreen.css';
 import { ReactComponent as LogoWhite } from '../../assets/LogoWhite.svg';
-import LoginCard from '../../components/LoginCard';
+import LoginCard from '../../components/LoginCard/LoginCard';
 
 function LoginScreen() {
   return (
