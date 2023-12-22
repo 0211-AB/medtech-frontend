@@ -9,7 +9,7 @@ function LoginScreen() {
       <div className='header'>
         <LogoWhite className="logo"  />
       </div>
-      <div className='container'>
+      <div className='centerDiv'>
         <LoginCard />
       </div>
     </div>

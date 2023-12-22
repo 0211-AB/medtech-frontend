@@ -32,3 +32,6 @@
     /* justify-content: center; */
 
 }
+.centerDiv{
+    margin: auto auto;
+}

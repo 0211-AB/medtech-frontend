@@ -1,13 +1,17 @@
 import React, { useState } from 'react';
 import './loginCard.css';
 import { FaRegEyeSlash, FaRegEye } from 'react-icons/fa';
+import { useNavigate} from 'react-router-dom';
+
 
 function LoginCard() {
+  const navigate = useNavigate()
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
   return (
+    <div className=" loginContainer container "> 
     <div className="loginCardWrapper">
       <div>
         <span className="loginCardTitle">Login</span>
@@ -42,10 +46,11 @@ function LoginCard() {
       </div>
 
       <div>
-        <button className="loginButton">Login</button>
+        <button className="loginButton" onDoubleClick={()=>{navigate('/reset-password')}} >Login</button>
       </div>
 
       <div></div>
+    </div>
     </div>
   );
 }
