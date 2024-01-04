@@ -6,7 +6,6 @@
 .loginCardTitle {
     font-size: 30px;
     font-weight: 600;
-    font-family: Urbanist;
     text-align: left;
     display: block;
     color: #333333;
@@ -16,7 +15,6 @@
 
 .title {
     display: block;
-    font-family: Urbanist;
     font-size: 16px;
     font-weight: 600;
     line-height: 19px;
@@ -84,7 +82,6 @@ svg {
     gap: 10px;
     background: linear-gradient(90deg, #6E75FF 0%, #C66EFF 100%);
     color: rgba(255, 255, 255, 1);
-    font-family: Urbanist;
     font-size: 14px;
     font-weight: 500;
     line-height: 24px;

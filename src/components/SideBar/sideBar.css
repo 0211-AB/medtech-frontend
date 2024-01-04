@@ -1,0 +1,13 @@
+.sideBarBox{
+    height: 80px;
+    width: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.selectedBox{
+    background: #29354d;
+    border-right:10px solid #6E75FF;
+}
