@@ -16,3 +16,11 @@ export const getTransriptDetailByID = async (request) => {
     );
     return response.data;
 };
+
+export const deleteTransriptByID = async (request) => {
+    let response = await axiosInstance.delete(
+        `/transcription/${request}`,
+        getAuthHeader()
+    );
+    return response.data;
+};

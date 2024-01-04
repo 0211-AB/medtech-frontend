@@ -5,7 +5,7 @@ import { ReactComponent as Search } from '../../assets/search.svg'
 import { ReactComponent as Filter } from '../../assets/filter.svg'
 import NavBar from '../../components/NavBar/NavBar';
 import SideBar from '../../components/SideBar/SideBar';
-import { getAllTranscripts } from '../../services/transcriptService';
+import { deleteTransriptByID, getAllTranscripts } from '../../services/transcriptService';
 import { toast, ToastContainer } from 'react-toastify'
 import moment from 'moment'
 
@@ -26,6 +26,7 @@ function HomeScreen() {
     const [meetings, setMeetings] = useState([])
     const [allMeetings, setAllMeetings] = useState([])
     const [searchKeyWord, setSearchKeyWord] = useState('')
+    const [transcriptId, setTrancriptId] = useState('')
 
     useEffect(() => {
         if (searchKeyWord !== "")
@@ -55,6 +56,27 @@ function HomeScreen() {
             getTranscripts()
         // eslint-disable-next-line
     }, [loading])
+
+    useEffect(() => {
+        const deleteTranscript = async () => {
+            try {
+                const res = await deleteTransriptByID(transcriptId)
+                if (res?.status === "success") {
+                    setMeetings(meetings => meetings.filter((m) => m.id !== transcriptId))
+                    setAllMeetings(meetings => meetings.filter((m) => m.id !== transcriptId))
+                    setTrancriptId('')
+                    toast(res.message)
+                } else
+                    throw new Error("Fetching Failed");
+            } catch (e) {
+                toast(e?.response?.data?.message ? e?.response?.data?.message : "An error occured. Please try again")
+            }
+        }
+
+        if (transcriptId !== '')
+            deleteTranscript()
+        // eslint-disable-next-line
+    }, [transcriptId])
 
     return (
         <div>
@@ -114,8 +136,8 @@ function HomeScreen() {
                                 {meetings.length === 0 && <div style={{ width: '100%', height: '20px', display: 'flex', alignItems: 'center', padding: '40px 30px', cursor: 'pointer', justifyContent: 'center' }}>No Meetings Found</div>}
 
                                 {meetings.map((meeting, index) => {
-                                    return <div style={{ width: '100%', height: '20px', display: 'flex', alignItems: 'center', padding: '40px 30px', cursor: 'pointer' }} key={index} onClick={() => { navigate(`/transcript-details?${meeting.id}`) }}>
-                                        <div style={{ width: '50%', paddingLeft: 25, display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
+                                    return <div style={{ width: '100%', height: '20px', display: 'flex', alignItems: 'center', padding: '40px 30px', cursor: 'pointer' }} key={index} >
+                                        <div style={{ width: '50%', paddingLeft: 25, display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }} onClick={() => { navigate(`/transcript-details?${meeting.id}`) }}>
                                             <div style={{
                                                 width: '40px',
                                                 height: '40px',
@@ -151,7 +173,7 @@ function HomeScreen() {
                                         <span style={{ width: '12%', color: '#6B6F76', fontWeight: 400, fontSize: 12 }}> <ion-icon name="time-outline"></ion-icon> {moment(meeting.createdAt).format('h:mm a')} </span>
                                         <span style={{ width: '12%', fontWeight: 400, fontSize: 12 }}>
                                             <span style={{ color: '#6E75FF', background: '#F3F3FF', padding: 5 }}>{msToTime(meeting.duration)} </span></span>
-                                        <span style={{ width: '12%', color: '#6e75ff', fontWeight: 400, fontSize: 15, marginLeft: '3%' }}>
+                                        <span style={{ width: '12%', color: '#6e75ff', fontWeight: 400, fontSize: 15, marginLeft: '3%' }} onClick={() => { setTrancriptId(meeting.id) }}>
                                             <ion-icon name="trash"></ion-icon>
                                         </span>
                                     </div>
