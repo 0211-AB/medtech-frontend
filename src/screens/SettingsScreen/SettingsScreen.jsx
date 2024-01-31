@@ -1,10 +1,37 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import NavBar from '../../components/NavBar/NavBar'
 import SideBar from '../../components/SideBar/SideBar'
+import { udpateTranscriptRetention } from '../../services/transcriptService'
+import { ToastContainer, toast } from 'react-toastify';
 
 const SettingsScreen = () => {
+    var prevDays = localStorage.getItem('Retention')
+    const [day, setDay] = useState(prevDays === null ? '' : prevDays)
+
+    console.log(day)
+    useEffect(() => {
+        const updateTranscripts = async () => {
+            try {
+                const res = await udpateTranscriptRetention({ day })
+                if (res?.status === "success") {
+                    toast("Updated Sucessfully!!")
+                    localStorage.setItem('Retention', `${day}`)
+                    prevDays = day
+                } else
+                    throw new Error("Fetching Failed");
+            } catch (e) {
+                toast(e?.response?.data?.message ? e?.response?.data?.message : "An error occured. Please try again")
+            }
+        }
+
+        if (day !== prevDays)
+            updateTranscripts()
+        // eslint-disable-next-line
+    }, [day])
+
     return (
         <div>
+            <ToastContainer />
             <NavBar />
             <div style={{ display: 'grid', gridTemplateColumns: '80px 1fr', height: '89vh' }}>
                 <SideBar />
@@ -29,9 +56,11 @@ const SettingsScreen = () => {
                         <h4 style={{ padding: '15px', fontWeight: '600' }}>AUTO DELETE MEETINGS</h4>
                         <p style={{ padding: '0 15px' }}>Set a custom data retention period to automatically delete meetings from your notebook. Every meeting will be retained for this time period, after which the meeting data will be permanently deleted from Scribe.ai</p>
 
-                        <select style={{ margin: '15px', padding: '10px', width: '60%', outline: 'none', border: '1px solid #EAECF0', background: '#FCFCFD', color: '#ADB5BD' }}>
-                            <option selected disabled>Choose Data Retention Period</option>
-                            <option>7 Days</option>
+                        <select style={{ margin: '15px', padding: '10px', width: '60%', outline: 'none', border: '1px solid #EAECF0', background: '#FCFCFD', color: '#ADB5BD' }} onChange={(e) => { setDay(e.target.value) }}>
+                            <option disabled>Choose Data Retention Period</option>
+                            <option selected={day === '7'} value='7'>7 Days</option>
+                            <option selected={day === '15'} value='15'>15 Days</option>
+                            <option selected={day === '30'} value='30'>30 Days</option>
                         </select>
 
                         <div style={{
@@ -50,7 +79,7 @@ const SettingsScreen = () => {
                         }}>
                             <h3 style={{ fontWeight: '400' }}>Delete Account</h3>
                             <p style={{ padding: '10px 0', color: '#6B6F76', width: '60%' }}>Be certain before you proceed. After taking the steps to delete the account it will first be <b>deactivated for 30 days</b> and after that the account will be <b>permanently deleted</b> and <b>cannot be undone.</b> You will lose all access to account data</p>
-                            <button style={{ width: '20%', padding: '10px 0', border: 'none', outline: 'none', alignSelf: 'flex-end', background: '#f5f5f5a' }}>Delete You Account</button>
+                            <button style={{ width: '20%', padding: '10px 0', border: 'none', outline: 'none', alignSelf: 'flex-end', background: '#f5f5f5a' }}>Delete Your Account</button>
                         </div>
                     </div>
                 </div>

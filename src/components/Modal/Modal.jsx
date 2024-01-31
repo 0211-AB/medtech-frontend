@@ -26,8 +26,21 @@ const Modal = ({ setIsOpen, setLoadingUsers }) => {
                 return;
             }
 
+            if ((/^\S+@\S+\.\S+$/).test(email) === false) {
+                toast("Valid email is required")
+                setLoading(false)
+                return;
+            }
+
             if (password === "") {
                 toast("Password is required")
+                setLoading(false)
+                return;
+            }
+
+
+            if ((/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/).test(password) === false) {
+                toast("Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character (@$!%*?&) is required for password")
                 setLoading(false)
                 return;
             }

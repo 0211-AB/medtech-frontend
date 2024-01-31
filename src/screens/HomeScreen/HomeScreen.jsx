@@ -1,40 +1,34 @@
 import React, { useState, useEffect } from 'react'
 import './homeScreen.css'
-import { useNavigate } from 'react-router-dom';
-import { ReactComponent as Search } from '../../assets/search.svg'
-import { ReactComponent as Filter } from '../../assets/filter.svg'
+import moment from 'moment'
 import NavBar from '../../components/NavBar/NavBar';
 import SideBar from '../../components/SideBar/SideBar';
 import { deleteTransriptByID, getAllTranscripts } from '../../services/transcriptService';
 import { toast, ToastContainer } from 'react-toastify'
-import moment from 'moment'
-
-function msToTime(s) {
-    var ms = s % 1000;
-    s = (s - ms) / 1000;
-    var secs = s % 60;
-    s = (s - secs) / 60;
-    var mins = s % 60;
-    var hrs = (s - mins) / 60;
-
-    return hrs + ' hrs ' + mins + ' mins ' + secs + ' secs ';
-}
+import Table from '../../components/Table/Table';
 
 function HomeScreen() {
-    const navigate = useNavigate()
     const [loading, setLoading] = useState(true)
     const [meetings, setMeetings] = useState([])
     const [allMeetings, setAllMeetings] = useState([])
     const [searchKeyWord, setSearchKeyWord] = useState('')
     const [transcriptId, setTrancriptId] = useState('')
+    const [state, setState] = useState([{ startDate: null, endDate: null, key: 'selection' }]);
 
     useEffect(() => {
         if (searchKeyWord !== "")
-            setMeetings(allMeetings.filter((m) => m.patientName?.toLowerCase()?.startsWith(searchKeyWord.toLowerCase()) || m.meetingId?.toLowerCase().startsWith(searchKeyWord.toLowerCase())))
+            setMeetings(allMeetings.filter((m) => m.meetingName?.toLowerCase()?.startsWith(searchKeyWord.toLowerCase()) || m.meetingId?.toLowerCase()?.startsWith(searchKeyWord.toLowerCase())))
         else
             setMeetings(allMeetings)
         // eslint-disable-next-line
     }, [searchKeyWord])
+
+    useEffect(() => {
+        if (state[0].startDate === null && state[0].endDate === null)
+            setMeetings(allMeetings)
+        else
+            setMeetings(allMeetings.filter((m) =>  m.createdAt >= moment(state[0].startDate).format() && m.createdAt <= moment(state[0].endDate).format() ))
+    }, [state])
 
     useEffect(() => {
         const getTranscripts = async () => {
@@ -102,84 +96,11 @@ function HomeScreen() {
                                 <circle class="pl__ring" cx="100" cy="100" r="82" fill="none" stroke="url(#pl-grad1)" stroke-width="36" stroke-dasharray="0 257 1 257" stroke-dashoffset="0.01" stroke-linecap="round" transform="rotate(-90,100,100)" />
                                 <line class="pl__ball" stroke="url(#pl-grad2)" x1="100" y1="18" x2="100.01" y2="182" stroke-width="36" stroke-dasharray="1 165" stroke-linecap="round" />
                             </svg> </div> : <>
-                            <div style={{ padding: '20px 50px', display: 'flex' }}>
-                                <span style={{
-                                    fontSize: '24px',
-                                    fontWeight: '500',
-                                    textAlign: 'left',
-                                }}>
-                                    Transcriptions</span>
-
-                                <div style={{ display: 'flex', width: '360px', height: '40px', background: 'white', marginLeft: '100px', borderRadius: 5, justifyContent: 'center', alignItems: 'center' }}>
-                                    <Search style={{ marginTop: 10, marginLeft: 10 }} />
-                                    <input
-                                        type="text"
-                                        value={searchKeyWord}
-                                        onChange={(e) => setSearchKeyWord(e.target.value)}
-                                        placeholder="Search meetings, transcripts..."
-                                    />
-                                    <Filter style={{ marginLeft: 'auto' }} />
-                                </div>
-
-
+                            <div style={{ padding: '20px 50px', borderRadius: '10px' }}>
+                                <Table data={meetings} pending={loading} setTrancriptId={setTrancriptId} searchKeyWord={searchKeyWord} setSearchKeyWord={setSearchKeyWord} state={state} setState={setState} />
                             </div>
-
-                            <div style={{ minHeight: '100vh', background: '#fff' }}>
-                                <div style={{ width: '100%', height: '20px', display: 'flex', alignItems: 'center', padding: '30px 30px', boxShadow: ' 0px -1px 0px 0px #EEEEEE inset' }}>
-                                    <span style={{ width: '50%', paddingLeft: 25 }}>Meeting</span>
-                                    <span style={{ width: '12%' }}>Date</span>
-                                    <span style={{ width: '12%' }}>Time</span>
-                                    <span style={{ width: '12%' }}>Duration</span>
-                                    <span style={{ width: '12%' }}>Action</span>
-                                </div>
-
-                                {meetings.length === 0 && <div style={{ width: '100%', height: '20px', display: 'flex', alignItems: 'center', padding: '40px 30px', cursor: 'pointer', justifyContent: 'center' }}>No Meetings Found</div>}
-
-                                {meetings.map((meeting, index) => {
-                                    return <div style={{ width: '100%', height: '20px', display: 'flex', alignItems: 'center', padding: '40px 30px', cursor: 'pointer' }} key={index} >
-                                        <div style={{ width: '50%', paddingLeft: 25, display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }} onClick={() => { navigate(`/transcript-details?${meeting.id}`) }}>
-                                            <div style={{
-                                                width: '40px',
-                                                height: '40px',
-                                                borderRadius: '100%',
-                                                background: 'rgba(122, 90, 248, 1)',
-                                                color: 'white',
-                                                textAlign: 'center',
-                                                display: 'flex',
-                                                justifyContent: 'center',
-                                                alignItems: 'center',
-                                            }}>
-                                                {meeting?.patientName?.charAt(0)}
-                                            </div>
-                                            <span style={{
-                                                margin: 'auto 20px', fontFamily: 'Poppins',
-                                                fontSize: '18px',
-                                                fontWeight: '500',
-                                                textAlign: 'left'
-                                            }}>
-                                                Meeting {index + 1}
-                                                <span style={{
-                                                    display: 'block', color: '#6E75FF', background: '#F3F3FF', padding: 5,
-                                                    fontFamily: 'Poppins',
-                                                    fontSize: '11px',
-                                                    fontWeight: '400',
-                                                    textAlign: 'left'
-                                                }}>
-                                                    {meeting.meetingId}
-                                                </span>
-                                            </span>
-                                        </div>
-                                        <span style={{ width: '12%', color: '#6B6F76', fontWeight: 400, fontSize: 12 }}><ion-icon name="calendar-clear-outline"></ion-icon> {moment(meeting.createdAt).format('dddd MMMM Do')}</span>
-                                        <span style={{ width: '12%', color: '#6B6F76', fontWeight: 400, fontSize: 12 }}> <ion-icon name="time-outline"></ion-icon> {moment(meeting.createdAt).format('h:mm a')} </span>
-                                        <span style={{ width: '12%', fontWeight: 400, fontSize: 12 }}>
-                                            <span style={{ color: '#6E75FF', background: '#F3F3FF', padding: 5 }}>{msToTime(meeting.duration)} </span></span>
-                                        <span style={{ width: '12%', color: '#6e75ff', fontWeight: 400, fontSize: 15, marginLeft: '3%' }} onClick={() => { setTrancriptId(meeting.id) }}>
-                                            <ion-icon name="trash"></ion-icon>
-                                        </span>
-                                    </div>
-                                })}
-
-                            </div></>}
+                        </>
+                    }
                 </div>
             </div>
         </div>

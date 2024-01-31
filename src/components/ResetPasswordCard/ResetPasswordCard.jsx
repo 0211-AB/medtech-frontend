@@ -24,6 +24,12 @@ function ResetPasswordCard({ handleSuccessfulReset }) {
                 return;
             }
 
+            if ((/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/).test(password) === false) {
+                toast("Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character (@$!%*?&) is required for password")
+                setLoading(false)
+                return;
+            }
+
             if (confirmPassword === "") {
                 toast("Confirm Password is required")
                 setLoading(false)

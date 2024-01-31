@@ -17,6 +17,13 @@
     height: 6.25em !important;
 }
 
+.pl2 {
+    display: block;
+    width: 50px !important;
+    height: 50px !important;
+    margin:0 !important;
+}
+
 .pl__ring,
 .pl__ball {
     animation: ring 2s ease-out infinite;

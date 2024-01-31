@@ -24,3 +24,21 @@ export const deleteTransriptByID = async (request) => {
     );
     return response.data;
 };
+
+export const udpateTranscriptRetention = async (request) => {
+    let response = await axiosInstance.patch(
+        `/transcription/delete-days`,
+        request,
+        getAuthHeader()
+    );
+    return response.data;
+};
+
+export const highlightTranscript = async (request) => {
+    let response = await axiosInstance.patch(
+        `/transcription/highlight/${request.id}`,
+        request,
+        getAuthHeader()
+    );
+    return response.data;
+};
