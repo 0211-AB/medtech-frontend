@@ -17,3 +17,11 @@
     display: block;
     font-size: small;
 }
+
+.nav-main svg {
+    width: 20px !important;
+    height: 20px !important;
+    margin-right: 20px;
+    margin-top: auto;
+    margin-bottom: auto;
+}

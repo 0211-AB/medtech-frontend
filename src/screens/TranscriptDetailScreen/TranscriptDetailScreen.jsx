@@ -17,6 +17,7 @@ import Meet from '../../assets/meetIcon.png'
 import Teams from '../../assets/teams.png'
 import Zoom from '../../assets/zoom.svg'
 import Tooltip from '../../components/ToolTip/ToolTip';
+import { summarizeTranscript } from '../../services/summaryService';
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
@@ -28,6 +29,7 @@ const TranscriptDetailScreen = () => {
     const [messages, setMessages] = useState([])
     const [transcriptDetail, setTranscriptDetail] = useState({})
     const [toBeHighlighted, setToBeHighlighted] = useState(null)
+    const [summaryLoading, setSummaryLoading] = useState(false)
     const location = useLocation()
 
     useEffect(() => {
@@ -37,6 +39,7 @@ const TranscriptDetailScreen = () => {
                 if (res?.status === "success") {
                     setLoading(false)
                     setTranscriptDetail(res?.result)
+                    setSummaryLoading(res?.result?.isTranscriptionComplete === true && res.result.summarizedTranscription === "")
                     setMessages(res?.result?.rawTranscription ? JSON.parse(res?.result?.rawTranscription) : [])
                 } else
                     throw new Error("Fetching Failed");
@@ -50,6 +53,27 @@ const TranscriptDetailScreen = () => {
             getTranscripts()
         // eslint-disable-next-line
     }, [loading])
+
+    useEffect(() => {
+        const summarizeTranscripts = async () => {
+            try {
+                const res = await summarizeTranscript(location.search.substring(1))
+                if (res?.status === "success") {
+                    setLoading(true)
+                    setSummaryLoading(false)
+                } else
+                    throw new Error("Fetching Failed");
+            } catch (e) {
+                setLoading(true)
+                setSummaryLoading(false)
+                toast(e?.response?.data?.message ? e?.response?.data?.message : "An error occured. Please try again")
+            }
+        }
+
+        if (summaryLoading)
+            summarizeTranscripts()
+        // eslint-disable-next-line
+    }, [summaryLoading])
 
     useEffect(() => {
         const updateTranscripts = async () => {
@@ -85,7 +109,7 @@ const TranscriptDetailScreen = () => {
                             <ion-icon name="arrow-back-outline" style={{ height: '20px', width: '20px', }}></ion-icon>
                         </div>
 
-                        <div style={{ display: 'flex', height: '30px', justifyContent: 'center', flexDirection: 'column', marginLeft: '30px',width: '100%' }}>
+                        <div style={{ display: 'flex', height: '30px', justifyContent: 'center', flexDirection: 'column', marginLeft: '30px', width: '100%' }}>
                             <div style={{
                                 fontSize: '15px',
                                 fontWeight: '600',
@@ -102,7 +126,7 @@ const TranscriptDetailScreen = () => {
                             }}>
 
                                 <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '2px' }}>
-                                    {transcriptDetail.meetingPlatform === "CUROGRAM" ? <img style={{ height: '20px' }} src={Curogram} data-tag="allowRowEvents" /> :transcriptDetail.meetingPlatform === "MEET"? <img style={{ height: '20px' }} src={Meet} data-tag="allowRowEvents" />:transcriptDetail.meetingPlatform === "ZOOM"?<img style={{ height: '20px' }} src={Zoom} data-tag="allowRowEvents" />:<img style={{ height: '20px' }} src={Teams} data-tag="allowRowEvents" />}
+                                    {transcriptDetail.meetingPlatform === "CUROGRAM" ? <img style={{ height: '20px' }} src={Curogram} data-tag="allowRowEvents" /> : transcriptDetail.meetingPlatform === "MEET" ? <img style={{ height: '20px' }} src={Meet} data-tag="allowRowEvents" /> : transcriptDetail.meetingPlatform === "ZOOM" ? <img style={{ height: '20px' }} src={Zoom} data-tag="allowRowEvents" /> : <img style={{ height: '20px' }} src={Teams} data-tag="allowRowEvents" />}
                                 </div>
 
                                 {transcriptDetail?.patientName !== 'Unknown' && <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1px' }}>
@@ -130,7 +154,7 @@ const TranscriptDetailScreen = () => {
                                 placeholder="Search Across The Transcript"
                                 style={{ height: '38px', color: 'rgba(126, 137, 168, 1)' }}
                             />
-                            <Search style={{ marginTop: 10, marginLeft: 10 }} />
+                            <Search style={{ marginRight: 10 }} />
                         </div>
 
                         <div style={{ position: 'relative' }}>
@@ -176,8 +200,8 @@ const TranscriptDetailScreen = () => {
                                 <circle class="pl__ring" cx="100" cy="100" r="82" fill="none" stroke="url(#pl-grad1)" stroke-width="36" stroke-dasharray="0 257 1 257" stroke-dashoffset="0.01" stroke-linecap="round" transform="rotate(-90,100,100)" />
                                 <line class="pl__ball" stroke="url(#pl-grad2)" x1="100" y1="18" x2="100.01" y2="182" stroke-width="36" stroke-dasharray="1 165" stroke-linecap="round" />
                             </svg> </div> :
-                            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}>
-                                <div style={{ maxHeight: '510px', overflowY: 'scroll', padding: '30px', flex: 1 }}>
+                            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start', height: '510px' }} className='details-section'>
+                                <div style={{ maxHeight: '510px', overflowY: 'auto', padding: '30px', flex: 1, order: '-1' }}>
                                     {messages.map((m, index) => {
                                         if (toBeHighlighted === index)
                                             return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', margin: '10px 0' }}>
@@ -197,29 +221,44 @@ const TranscriptDetailScreen = () => {
                                                 </svg> </div>
 
                                         return (
-                                            <div style={{ background: m.highlight === true ? 'lightyellow' : 'white', padding: '1px 5px', borderRadius: '10px' }}>
+                                            <div className='message-container' style={{ background: m.highlight === true ? 'lightyellow' : 'white', borderRadius: '10px', position: 'relative' }}>
+                                                {m.highlight === true ? <div className='highlightButton highlight-active'>
+                                                    <Tooltip content="Double click to remove highlight !!" direction="left">
+                                                        <ion-icon name="bookmarks" onDoubleClick={() => { setToBeHighlighted(index) }}></ion-icon>
+                                                    </Tooltip>
+                                                </div> : <div className='highlightButton'>
+                                                    <Tooltip content="Double click to highlight !!" direction="left">
+                                                        <ion-icon name="bookmarks-outline" onDoubleClick={() => { setToBeHighlighted(index) }}></ion-icon>
+                                                    </Tooltip>
+                                                </div>}
                                                 <Highlighter
                                                     highlightClassName="YourHighlightClass"
                                                     searchWords={[searchWord]}
                                                     autoEscape={true}
                                                     textToHighlight={m.text ? m.text : m}
                                                 />
-                                                {m.highlight === true ? <div style={{ display: 'flex', justifyContent: 'flex-end', fontSize: 14, cursor: 'pointer' }}>
-                                                    <Tooltip content="Double click on icon to remove highlight !!" direction="left">
-                                                        <ion-icon name="bookmarks" onDoubleClick={() => { setToBeHighlighted(index) }}></ion-icon>
-                                                    </Tooltip>
-                                                </div> : <div style={{ display: 'flex', justifyContent: 'flex-end', fontSize: 14, cursor: 'pointer' }}>
-                                                    <Tooltip content="Double click on icon to highlight !!" direction="left">
-                                                        <ion-icon name="bookmarks-outline" onDoubleClick={() => { setToBeHighlighted(index) }}></ion-icon>
-                                                    </Tooltip>
-                                                </div>}
-                                                <br></br>
                                             </div>
                                         );
                                     })}
                                 </div>
-                                <div style={{ maxHeight: '510px', overflowY: 'scroll', padding: '30px', flex: 1 }}>
-                                    {transcriptDetail.summarizedTranscription}
+                                <div style={{ maxHeight: '510px', overflowY: 'auto', padding: '30px', flex: 1 }}>
+                                    {summaryLoading === true ? <div id='svg-container'>
+                                        <svg class="pl" viewBox="0 0 200 200" width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+                                            <defs>
+                                                <linearGradient id="pl-grad1" x1="1" y1="0.5" x2="0" y2="0.5">
+                                                    <stop offset="0%" stop-color="hsl(313,90%,55%)" />
+                                                    <stop offset="100%" stop-color="hsl(223,90%,55%)" />
+                                                </linearGradient>
+                                                <linearGradient id="pl-grad2" x1="0" y1="0" x2="0" y2="1">
+                                                    <stop offset="0%" stop-color="hsl(313,90%,55%)" />
+                                                    <stop offset="100%" stop-color="hsl(223,90%,55%)" />
+                                                </linearGradient>
+                                            </defs>
+                                            <circle class="pl__ring" cx="100" cy="100" r="82" fill="none" stroke="url(#pl-grad1)" stroke-width="36" stroke-dasharray="0 257 1 257" stroke-dashoffset="0.01" stroke-linecap="round" transform="rotate(-90,100,100)" />
+                                            <line class="pl__ball" stroke="url(#pl-grad2)" x1="100" y1="18" x2="100.01" y2="182" stroke-width="36" stroke-dasharray="1 165" stroke-linecap="round" />
+                                        </svg> </div> : transcriptDetail.isTranscriptionComplete === true ? <>
+                                            {transcriptDetail.summarizedTranscription}
+                                        </> : <div style={{ display: 'flex', height: '40px', background: 'white', borderRadius: 5, justifyContent: 'center', alignItems: 'center', color: 'rgba(110, 117, 255, 1)', cursor: 'pointer', position: 'relative', fontWeight: '500' }}> Transcription Is Still In Progress . Summary Will be generated once it is finished !!!</div>}
                                 </div>
                             </div>}
                     </div>

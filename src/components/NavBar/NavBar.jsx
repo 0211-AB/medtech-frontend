@@ -14,7 +14,7 @@ const NavBar = () => {
   };
 
   return (
-    <div style={{
+    <div className='nav-main' style={{
       height: '77px',
       background: '#fff',
       width: '100%',

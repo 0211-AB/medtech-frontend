@@ -4,18 +4,9 @@ import NavBar from '../../components/NavBar/NavBar';
 import SideBar from '../../components/SideBar/SideBar';
 import Modal from '../../components/Modal/Modal';
 import { toast, ToastContainer } from 'react-toastify'
-import { changeAdminStatus, getAllUsers, updatedUserStatus } from '../../services/userService';
-
-const getRandomNumber = (limit) => {
-    return Math.floor(Math.random() * limit);
-};
-
-const setBackgroundColor = () => {
-    const h = getRandomNumber(360);
-    const randomColor = `hsl(${h}deg, 50%, 30%)`;
-
-    return randomColor;
-};
+import { changeAdminStatus, deleteUser, getAllUsers, updatedUserStatus } from '../../services/userService';
+import UserTable from '../../components/Table/UserTable';
+import EditModal from '../../components/Modal/EditModal';
 
 const UserScreen = () => {
     const [isOpen, setIsOpen] = useState(false)
@@ -23,8 +14,24 @@ const UserScreen = () => {
     const [loading, setLoading] = useState(true)
     const [users, setUsers] = useState([])
     const [searchKeyword, setSearchKeyword] = useState("")
-    const [tab, setTab] = useState("active")
+    const [userData, setUserData] = useState(null)
     const [divHeight, setDivHeight] = useState(0);
+    const [isEditOpen, setIsEditOpen] = useState(false)
+
+    const deleteUserByEmail = async (request) => {
+        try {
+            const res = await deleteUser(request)
+            if (res?.status === "success") {
+                setLoading(true)
+                toast(res.message)
+            } else
+                throw new Error("Failed To Update User Status");
+        } catch (e) {
+            console.log(e)
+            setLoading(true)
+            toast(e?.response?.data?.message ? e?.response?.data?.message : "An error occured. Please try again")
+        }
+    }
 
     const updateStatus = async (request) => {
         try {
@@ -56,7 +63,7 @@ const UserScreen = () => {
 
     useEffect(() => {
         if (searchKeyword !== "")
-            setUsers(allUsers.filter((u) => u.Name.startsWith(searchKeyword) || u.email.startsWith(searchKeyword)))
+            setUsers(allUsers.filter((u) => u.Name.includes(searchKeyword) || u.email.includes(searchKeyword)))
         else
             setUsers(allUsers)
     }, [searchKeyword])
@@ -102,156 +109,34 @@ const UserScreen = () => {
     return (
         <div>
             <ToastContainer />
-            {isOpen && <Modal setIsOpen={setIsOpen} setLoadingUsers={setLoading}/>}
+            {isOpen && <Modal setIsOpen={setIsOpen} setLoadingUsers={setLoading} />}
+            {isEditOpen && <EditModal setIsOpen={setIsEditOpen} setLoadingUsers={setLoading} data={userData} />}
             <NavBar />
             <div style={{ display: 'grid', gridTemplateColumns: '80px 1fr', height: divHeight }}>
                 <SideBar />
-                <div style={{ flexGrow: '1', display: 'flex', flexDirection: 'column', background: '#Fff', height: '100%' }}>
+                <div style={{ flexGrow: '1', display: 'flex', flexDirection: 'column', minHeight: '100vh', background: '#F8F8F8' }}>
 
-                    <div style={{ padding: '20px 50px', display: 'flex', alignItems: 'center' }}>
-                        <span style={{
-                            fontSize: '24px',
-                            fontWeight: '500',
-                            textAlign: 'left',
-                            marginRight: '50px'
-                        }}>
-                            Team</span>
-
-                        <div style={{ fontSize: '12px', padding: '10px', fontWeight: '500', borderBottom: tab === "active" ? '2px solid #3F51B5' : '', color: tab === "active" ? '#3F51B5' : '#0000008A', cursor: 'pointer' }} onClick={() => { setTab("active") }}>ACTIVE ({users.filter((u) => u.isActive)?.length ? users.filter((u) => u.isActive)?.length : 0})</div>
-
-                        <div style={{ fontSize: '12px', fontWeight: '500', color: tab === "inactive" ? '#3F51B5' : '#0000008A', padding: '10px', cursor: 'pointer', borderBottom: tab === "inactive" ? '2px solid #3F51B5' : '', }} onClick={() => { setTab("inactive") }}> DEACTIVATED ({users.filter((u) => u.isActive === true)?.length ? users.filter((u) => u.isActive === false)?.length : 0})</div>
-
-                        <div style={{ display: 'flex', width: '360px', height: '40px', background: '#F6F6F6', marginLeft: '35%', borderRadius: 5, justifyContent: 'center', alignItems: 'center' }}>
-                            <Search style={{ marginTop: 10, marginLeft: 10 }} />
-                            <input
-                                type="text"
-                                placeholder="Search by name or user ID"
-                                value={searchKeyword}
-                                onChange={(e) => setSearchKeyword(e.target.value)}
-                                style={{ height: '38px', color: 'rgba(126, 137, 168, 1)', background: '#F6F6F6' }}
-                            />
-                        </div>
-
-                        <div style={{ position: 'relative' }}>
-                            <div style={{ display: 'flex', height: '40px', background: 'rgba(110, 117, 255, 1)', borderRadius: 5, marginLeft: '20px', border: '1px solid rgba(110, 117, 255, 1)', justifyContent: 'center', alignItems: 'center', color: 'white', cursor: 'pointer', position: 'relative', padding: '0 5px', gap: '5px', fontSize: '15px' }} onClick={toggleOpen}>
-                                <ion-icon name="person-add-outline" style={{ fontSize: '25px' }}></ion-icon>
-                                Add members
+                    {loading ?
+                        <div id='svg-container'>
+                            <svg class="pl" viewBox="0 0 200 200" width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+                                <defs>
+                                    <linearGradient id="pl-grad1" x1="1" y1="0.5" x2="0" y2="0.5">
+                                        <stop offset="0%" stop-color="hsl(313,90%,55%)" />
+                                        <stop offset="100%" stop-color="hsl(223,90%,55%)" />
+                                    </linearGradient>
+                                    <linearGradient id="pl-grad2" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="0%" stop-color="hsl(313,90%,55%)" />
+                                        <stop offset="100%" stop-color="hsl(223,90%,55%)" />
+                                    </linearGradient>
+                                </defs>
+                                <circle class="pl__ring" cx="100" cy="100" r="82" fill="none" stroke="url(#pl-grad1)" stroke-width="36" stroke-dasharray="0 257 1 257" stroke-dashoffset="0.01" stroke-linecap="round" transform="rotate(-90,100,100)" />
+                                <line class="pl__ball" stroke="url(#pl-grad2)" x1="100" y1="18" x2="100.01" y2="182" stroke-width="36" stroke-dasharray="1 165" stroke-linecap="round" />
+                            </svg> </div> : <>
+                            <div style={{ padding: '20px 50px', borderRadius: '10px' }}>
+                                <UserTable data={users} searchKeyWord={searchKeyword} setSearchKeyWord={setSearchKeyword} pending={loading} updateAdminStatus={updateAdminStatus} updateStatus={updateStatus} toggleOpen={() => { setIsEditOpen(!isEditOpen) }} setUserData={setUserData} deleteUser={deleteUserByEmail}/>
                             </div>
-                        </div>
-                    </div>
-
-                    {(tab === "active" && users.filter((u) => u.isActive)?.length > 0) ? users.filter((u) => u.isActive).map((user, index) => {
-                        return <div style={{ width: '100%', height: '20px', display: 'flex', alignItems: 'center', padding: '40px 0px', cursor: 'pointer', }} key={index}>
-                            <div style={{ width: '25%', paddingLeft: 50, display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
-                                <div style={{
-                                    width: '40px',
-                                    height: '40px',
-                                    borderRadius: '100%',
-                                    background: setBackgroundColor(),
-                                    color: 'white',
-                                    textAlign: 'center',
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                }}>
-                                    {user.Name?.substring(0, 1)?.toUpperCase()}
-                                </div>
-                                <span style={{
-                                    margin: 'auto 20px', fontFamily: 'Poppins',
-                                    fontSize: '15px',
-                                    fontWeight: '500',
-                                    textAlign: 'left', color: '#3C4149'
-                                }}>
-                                    {user.Name} {user.role === "Admin" ? ' (Admin)' : ''}
-                                    <span style={{
-                                        display: 'block', padding: 2,
-                                        fontFamily: 'Poppins',
-                                        color: '#6B6F76',
-                                        fontSize: '11px',
-                                        fontWeight: '400',
-                                        textAlign: 'left'
-                                    }}>
-                                        {user.email}
-                                    </span>
-                                </span>
-                            </div>
-                            <span style={{ width: '5%', color: '#388E3B', background: '#E8F5E9', fontWeight: 400, fontSize: 12, padding: 3, borderRadius: '5px', display: 'flex', alignItems: 'center', justifyContent: 'space-evenly' }}><ion-icon name="checkmark-outline"></ion-icon>Active</span>
-
-                            {user.role !== "Admin" && <div style={{ position: 'absolute', right: '100px' }}><span style={{ width: '15%', fontWeight: 400, fontSize: 12 }}>
-                                <span style={{ color: '#6E75FF', background: '#F3F3FF', padding: 5, marginRight: 10, borderRadius: 5 }} onClick={() => { updateAdminStatus({ email: user.email, role: "Admin" }) }}>Change To admin  </span>
-                            </span>
-
-                                <span style={{ width: '15%', fontWeight: 400, fontSize: 12 }}>
-                                    <span style={{ color: '#6B6F76', background: '#EBEBEB', padding: 5, marginRight: 10, borderRadius: 5 }} onClick={() => { updateStatus({ email: user.email, status: false }) }}>  Deactivate  </span>
-                                </span>
-
-                                <span style={{ width: '15%', fontWeight: 400, fontSize: 12 }}>
-                                    <span style={{ color: '#E13333', background: '#FFF5F5', padding: 5, borderRadius: 5 }}>Remove  </span>
-                                </span>
-                            </div>}
-
-                            {user.role === "Admin" && <div style={{ position: 'absolute', right: '100px' }}><span style={{ width: '15%', fontWeight: 400, fontSize: 12 }}>
-                                <span style={{ color: '#6E75FF', background: '#F3F3FF', padding: 5, borderRadius: 5 }} onClick={() => { updateAdminStatus({ email: user.email, role: "Provider" }) }}>Change To non-admin  </span>
-                            </span>
-                            </div>}
-                        </div>
-                    }) : (tab === "inactive" && users.filter((u) => u.isActive === false)?.length > 0) ? users.filter((u) => u.isActive === false).map((user, index) => {
-                        return <div style={{ width: '100%', height: '20px', display: 'flex', alignItems: 'center', padding: '40px 0px', cursor: 'pointer' }} key={index}>
-                            <div style={{ width: '25%', paddingLeft: 50, display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
-                                <div style={{
-                                    width: '40px',
-                                    height: '40px',
-                                    borderRadius: '100%',
-                                    background: setBackgroundColor(),
-                                    color: 'white',
-                                    textAlign: 'center',
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                }}>
-                                    {user.Name?.substring(0, 1)?.toUpperCase()}
-                                </div>
-                                <span style={{
-                                    margin: 'auto 20px', fontFamily: 'Poppins',
-                                    fontSize: '15px',
-                                    fontWeight: '500',
-                                    textAlign: 'left', color: '#3C4149'
-                                }}>
-                                    {user.Name} {user.role === "Admin" ? ' (Admin)' : ''}
-                                    <span style={{
-                                        display: 'block', padding: 2,
-                                        fontFamily: 'Poppins',
-                                        color: '#6B6F76',
-                                        fontSize: '11px',
-                                        fontWeight: '400',
-                                        textAlign: 'left'
-                                    }}>
-                                        {user.email}
-                                    </span>
-                                </span>
-                            </div>
-                            <span style={{ width: '5%', color: '#388E3B', background: '#E8F5E9', fontWeight: 400, fontSize: 12, padding: 3, borderRadius: '5px', display: 'flex', alignItems: 'center', justifyContent: 'space-evenly' }}><ion-icon name="checkmark-outline"></ion-icon>Active</span>
-
-                            {user.role !== "Admin" && <div style={{ position: 'absolute', right: '100px' }}><span style={{ width: '15%', fontWeight: 400, fontSize: 12 }}>
-                                <span style={{ color: '#6E75FF', background: '#F3F3FF', padding: 5, marginRight: 10, borderRadius: 5 }} onClick={() => { updateAdminStatus({ email: user.email, role: "Admin" }) }}>Change To admin </span>
-                            </span>
-
-                                <span style={{ width: '15%', fontWeight: 400, fontSize: 12 }}>
-                                    <span style={{ color: '#6B6F76', background: '#EBEBEB', padding: 5, marginRight: 10, borderRadius: 5 }} onClick={() => { updateStatus({ email: user.email, status: true }) }}>  Activate  </span>
-                                </span>
-
-                                <span style={{ width: '15%', fontWeight: 400, fontSize: 12 }}>
-                                    <span style={{ color: '#E13333', background: '#FFF5F5', padding: 5, borderRadius: 5 }}>Remove  </span>
-                                </span>
-                            </div>}
-
-                            {user.role === "Admin" && <div style={{ position: 'absolute', right: '100px' }}><span style={{ width: '15%', fontWeight: 400, fontSize: 12 }}>
-                                <span style={{ color: '#6E75FF', background: '#F3F3FF', padding: 5, borderRadius: 5 }} onClick={() => { updateAdminStatus({ email: user.email, role: "Provider" }) }}>Change To non-admin  </span>
-                            </span>
-                            </div>}
-
-                        </div>
-                    }) : <div style={{ width: '100%', height: '20px', display: 'flex', alignItems: 'center', padding: '20px 50px' }}>No Users Found...</div>}
+                        </>
+                    }
                 </div>
             </div>
         </div>)

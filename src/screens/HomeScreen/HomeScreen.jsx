@@ -17,7 +17,7 @@ function HomeScreen() {
 
     useEffect(() => {
         if (searchKeyWord !== "")
-            setMeetings(allMeetings.filter((m) => m.meetingName?.toLowerCase()?.startsWith(searchKeyWord.toLowerCase()) || m.meetingId?.toLowerCase()?.startsWith(searchKeyWord.toLowerCase())))
+            setMeetings(allMeetings.filter((m) => m.meetingName?.toLowerCase()?.includes(searchKeyWord.toLowerCase()) || m.meetingId?.toLowerCase()?.includes(searchKeyWord.toLowerCase())))
         else
             setMeetings(allMeetings)
         // eslint-disable-next-line

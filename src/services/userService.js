@@ -35,3 +35,20 @@ export const changeAdminStatus = async (request) => {
     );
     return response.data;
 };
+
+export const updateUser = async (request) => {
+    let response = await axiosInstance.patch(
+        `/user`,
+        request,
+        getAuthHeader()
+    );
+    return response.data;
+};
+
+export const deleteUser = async (request) => {
+    let response = await axiosInstance.delete(
+        `/user/${request.email}`,
+        getAuthHeader()
+    );
+    return response.data;
+};

@@ -85,7 +85,7 @@ const Table = ({ data, pending, setTrancriptId, searchKeyWord, setSearchKeyWord,
             <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
 
                 <div style={{ display: 'flex', width: '360px', height: '40px', background: '#F6F6F6', borderRadius: 5, justifyContent: 'center', alignItems: 'center', border: '1px solid rgba(126, 137, 168, 1)' }}>
-                    <Search style={{ marginTop: 10, marginLeft: 10 }} />
+                    <Search style={{ marginLeft: 10 }} />
                     <input
                         type="text"
                         placeholder="Search by Meeting Name"

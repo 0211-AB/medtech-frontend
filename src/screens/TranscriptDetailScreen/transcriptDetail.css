@@ -21,3 +21,35 @@
     border-radius: 5px;
     height: 25px;
 }
+
+.highlightButton {
+    justify-content: flex-end;
+    font-size: 14px;
+    cursor: pointer;
+    position: absolute;
+    display: none;
+    right: 0;
+}
+
+.message-container {
+    padding: 8px 24px 8px 0;
+}
+
+.message-container span {
+    cursor: pointer;
+}
+
+.message-container:hover .highlightButton {
+    display: flex;
+}
+
+.highlight-active {
+    display: flex;
+}
+
+.details-section:before {
+    margin-top: 20px;
+    content: "";
+    border: 1px solid #d3d3d3;
+    align-self: stretch;
+}
