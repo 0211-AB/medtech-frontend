@@ -5,11 +5,15 @@ import { toast, ToastContainer } from "react-toastify";
 import { updateUser } from "../../services/userService";
 
 const EditModal = ({ setIsOpen, setLoadingUsers, data }) => {
+    console.log(data)
     const [loading, setLoading] = useState(false)
     const [name, setName] = useState(data.Name);
     const [email, setEmail] = useState(data.email);
     const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [role, setRole] = useState(data.role)
 
     useEffect(() => {
         if (loading === true) {
@@ -32,16 +36,22 @@ const EditModal = ({ setIsOpen, setLoadingUsers, data }) => {
                 return;
             }
 
-            
-            if (password!=="" && (/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/).test(password) === false) {
+
+            if (password !== "" && (/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/).test(password) === false) {
                 toast("Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character (@$!%*?&) is required for password")
+                setLoading(false)
+                return;
+            }
+
+            if (confirmPassword !== password) {
+                toast("The passwords are not mtaching. Please try again")
                 setLoading(false)
                 return;
             }
 
             const updateUserDetails = async () => {
                 try {
-                    const res = await updateUser({ email, password, name, id: data.id })
+                    const res = await updateUser({ email, password, name, id: data.id, role })
                     if (res?.status === "success") {
                         toast('Updated User Sucessfully')
                         setIsOpen(false)
@@ -110,6 +120,31 @@ const EditModal = ({ setIsOpen, setLoadingUsers, data }) => {
                                 </span>
                             </div>
                         </div>
+
+                        <span className="resetPasswordTitle" style={{ marginTop: '10px' }}>Confirm Password</span>
+                        <div className="passwordInputWrapper">
+                            <div className="passwordInputInnerWrapper">
+                                <input
+                                    type={showConfirmPassword ? 'text' : 'password'}
+                                    value={confirmPassword}
+                                    placeholder="Enter your password"
+                                    onChange={(e) => setConfirmPassword(e.target.value)}
+                                />
+                                <span
+                                    className={`eye-icon ${showConfirmPassword ? 'visible' : ''}`}
+                                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                >
+                                    {showConfirmPassword ? <FaRegEye /> : <FaRegEyeSlash />}
+                                </span>
+                            </div>
+                        </div>
+
+                        <span className="title">Select Role </span>
+                        <select style={{ padding: '10px', outline: 'none', border: '1px solid #EAECF0', color: '#ADB5BD', borderRadius: '10px' }} onChange={(e) => { setRole(e.target.value) }}>
+                            <option disabled>Choose Role</option>
+                            <option selected={role === 'Provider'} value={'Provider'}>Provider</option>
+                            <option selected={role === 'Admin'} value={'Admin'}>Admin</option>
+                        </select>
 
                         <div>
                             <button className="loginButton" style={{ border: 'none', cursor: 'pointer' }} onClick={() => { setLoading(true) }} >Edit Details</button>

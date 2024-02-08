@@ -1,22 +1,19 @@
 import React, { useEffect, useState } from 'react'
 import NavBar from '../../components/NavBar/NavBar'
 import SideBar from '../../components/SideBar/SideBar'
-import { udpateTranscriptRetention } from '../../services/transcriptService'
 import { ToastContainer, toast } from 'react-toastify';
+import { getConfig, updateConfig } from '../../services/configService';
 
 const SettingsScreen = () => {
-    var prevDays = localStorage.getItem('Retention')
-    const [day, setDay] = useState(prevDays === null ? '' : prevDays)
+    const [data, setData] = useState(null)
+    const [updateData, setUpdateData] = useState(null)
 
-    console.log(day)
     useEffect(() => {
-        const updateTranscripts = async () => {
+        const getConfigData = async () => {
             try {
-                const res = await udpateTranscriptRetention({ day })
+                const res = await getConfig()
                 if (res?.status === "success") {
-                    toast("Updated Sucessfully!!")
-                    localStorage.setItem('Retention', `${day}`)
-                    prevDays = day
+                    setData(res.config)
                 } else
                     throw new Error("Fetching Failed");
             } catch (e) {
@@ -24,13 +21,31 @@ const SettingsScreen = () => {
             }
         }
 
-        if (day !== prevDays)
-            updateTranscripts()
+        if (data === null)
+            getConfigData()
         // eslint-disable-next-line
-    }, [day])
+    }, [])
+
+    useEffect(() => {
+        const updateConfigData = async () => {
+            try {
+                const res = await updateConfig(updateData)
+                if (res?.status === "success") {
+                    toast('Updated Setting Successfully')
+                    setUpdateData(null)
+                } else
+                    throw new Error("Fetching Failed");
+            } catch (e) {
+                toast(e?.response?.data?.message ? e?.response?.data?.message : "An error occured. Please try again")
+            }
+        }
+
+        if (updateData !== null)
+            updateConfigData()
+    }, [updateData])
 
     return (
-        <div>
+        <>
             <ToastContainer />
             <NavBar />
             <div style={{ display: 'grid', gridTemplateColumns: '80px 1fr', height: '89vh' }}>
@@ -56,13 +71,15 @@ const SettingsScreen = () => {
                         <h4 style={{ padding: '15px', fontWeight: '600' }}>AUTO DELETE MEETINGS</h4>
                         <p style={{ padding: '0 15px' }}>Set a custom data retention period to automatically delete meetings from your notebook. Every meeting will be retained for this time period, after which the meeting data will be permanently deleted from Scribe.ai</p>
 
-                        <select style={{ margin: '15px', padding: '10px', width: '60%', outline: 'none', border: '1px solid #EAECF0', background: '#FCFCFD', color: '#ADB5BD' }} onChange={(e) => { setDay(e.target.value) }}>
+                        <select style={{ margin: '15px', padding: '10px', width: '60%', outline: 'none', border: '1px solid #EAECF0', background: '#FCFCFD', color: '#ADB5BD' }} onChange={(e) => { setUpdateData({ days: e.target.value }) }}>
                             <option disabled>Choose Data Retention Period</option>
-                            <option selected={day === '7'} value='7'>7 Days</option>
-                            <option selected={day === '15'} value='15'>15 Days</option>
-                            <option selected={day === '30'} value='30'>30 Days</option>
+                            <option selected={data?.daysToDelete === '7'} value='7'>7 Days</option>
+                            <option selected={data?.daysToDelete === '15'} value='15'>15 Days</option>
+                            <option selected={data?.daysToDelete === '30'} value='30'>30 Days</option>
                         </select>
+                    </div>
 
+                    <div style={{ display: 'flex', flexDirection: 'column', background: '#fff', width: '90%', padding: '10px 40px' }}>
                         <div style={{
                             padding: '15px', display: 'flex', background: '#F5F5F5', fontSize: '24px',
                             fontWeight: '500',
@@ -70,21 +87,22 @@ const SettingsScreen = () => {
                             width: '100%',
                             borderRadius: '10px'
                         }}>
-                            Account Settings
+                            File Upload Settings
                         </div>
+                        <h4 style={{ padding: '15px', fontWeight: '600' }}>MAXIMUM FILE UPLOAD SIZE LIMIT</h4>
+                        <p style={{ padding: '0 15px' }}>Adjust the maximum size allowed for file uploads. This affects the size of files users can upload to the platform.<br></br>
+                            <b>Note :   </b> Increasing the file upload size limit may affect performance and storage usage.</p>
 
-                        <div style={{
-                            margin: '15px 0', padding: '15px', display: 'flex', background: '#FaFaFa',
-                            width: '100%', justifyContent: 'center', flexDirection: 'column'
-                        }}>
-                            <h3 style={{ fontWeight: '400' }}>Delete Account</h3>
-                            <p style={{ padding: '10px 0', color: '#6B6F76', width: '60%' }}>Be certain before you proceed. After taking the steps to delete the account it will first be <b>deactivated for 30 days</b> and after that the account will be <b>permanently deleted</b> and <b>cannot be undone.</b> You will lose all access to account data</p>
-                            <button style={{ width: '20%', padding: '10px 0', border: 'none', outline: 'none', alignSelf: 'flex-end', background: '#f5f5f5a' }}>Delete Your Account</button>
-                        </div>
+                        <select style={{ margin: '15px', padding: '10px', width: '60%', outline: 'none', border: '1px solid #EAECF0', background: '#FCFCFD', color: '#ADB5BD' }} onChange={(e) => { setUpdateData({ size: e.target.value }) }}>
+                            <option disabled>Choose Maximum File Size</option>
+                            <option selected={data?.maxUploadSize === '104857600'} value='104857600'>100 MB</option>
+                            <option selected={data?.maxUploadSize === '209715200'} value='209715200'>200 MB</option>                                    
+                            <option selected={data?.maxUploadSize === '314572800'} value='314572800'>300 MB</option>
+                        </select>
                     </div>
                 </div>
             </div>
-        </div>
+        </>
     )
 }
 

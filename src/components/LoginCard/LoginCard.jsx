@@ -39,7 +39,7 @@ function LoginCard() {
         try {
           const res = await signIn({ email, password })
           if (res?.status === "success") {
-            authCtx.login(res.data.token, res.data.role === "Admin", { name: res.data.name, email: res.data.email })
+            authCtx.login(res.data.token, res.data.role === "Admin", res.data.role === "SuperAdmin", { name: res.data.name, email: res.data.email, organization: res.data.organization })
             if (res.data.hasResetPassword === false)
               navigate('/reset-password')
             else

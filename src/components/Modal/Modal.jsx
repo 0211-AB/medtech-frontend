@@ -9,7 +9,9 @@ const Modal = ({ setIsOpen, setLoadingUsers }) => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     useEffect(() => {
         if (loading === true) {
@@ -34,6 +36,12 @@ const Modal = ({ setIsOpen, setLoadingUsers }) => {
 
             if (password === "") {
                 toast("Password is required")
+                setLoading(false)
+                return;
+            }
+
+            if (confirmPassword !== password) {
+                toast("The passwords are not mtaching. Please try again")
                 setLoading(false)
                 return;
             }
@@ -113,6 +121,24 @@ const Modal = ({ setIsOpen, setLoadingUsers }) => {
                                     onClick={() => setShowPassword(!showPassword)}
                                 >
                                     {showPassword ? <FaRegEye /> : <FaRegEyeSlash />}
+                                </span>
+                            </div>
+                        </div>
+
+                        <span className="resetPasswordTitle" style={{ marginTop: '10px' }}>Confirm Password</span>
+                        <div className="passwordInputWrapper">
+                            <div className="passwordInputInnerWrapper">
+                                <input
+                                    type={showConfirmPassword ? 'text' : 'password'}
+                                    value={confirmPassword}
+                                    placeholder="Enter your password"
+                                    onChange={(e) => setConfirmPassword(e.target.value)}
+                                />
+                                <span
+                                    className={`eye-icon ${showConfirmPassword ? 'visible' : ''}`}
+                                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                >
+                                    {showConfirmPassword ? <FaRegEye /> : <FaRegEyeSlash />}
                                 </span>
                             </div>
                         </div>

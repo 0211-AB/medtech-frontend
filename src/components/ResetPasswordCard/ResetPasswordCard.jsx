@@ -70,7 +70,7 @@ function ResetPasswordCard({ handleSuccessfulReset }) {
             <div className='resetPasswordCardWrapper'>
                 <Key className='keyIcon' />
                 <span className='resetPasswordHeading'>Set New Password</span>
-                <span className='resetPasswordSubHeading'>Your new password must be different from previously used passwords.</span>
+                <span className='resetPasswordSubHeading'>Your new password must be different from previously used password.</span>
                 <span className="resetPasswordTitle">New Password</span>
                 <div className="passwordInputWrapper" style={{ marginTop: '10px' }}>
                     <div className="passwordInputInnerWrapper">
@@ -88,8 +88,8 @@ function ResetPasswordCard({ handleSuccessfulReset }) {
                         </span>
                     </div>
                 </div>
-                <span className="resetPasswordTitle">Confirm Password</span>
-                <div className="passwordInputWrapper" style={{ marginTop: '10px' }}>
+                <span className="resetPasswordTitle" style={{ marginTop: '10px' }}>Confirm Password</span>
+                <div className="passwordInputWrapper">
                     <div className="passwordInputInnerWrapper">
                         <input
                             type={showConfirmPassword ? 'text' : 'password'}
@@ -105,13 +105,13 @@ function ResetPasswordCard({ handleSuccessfulReset }) {
                         </span>
                     </div>
                 </div>
-                {loading === false ? <button className="resetButton" onClick={() => {
+                {loading === false ? <button className="resetButton" style={{ marginTop: 25 }} onClick={() => {
                     console.log('button clicked');
                     setLoading(true)
-                }}>Reset Password</button> : <button className="resetButton">Loading ... </button>}
+                }}>Reset Password</button> : <button className="resetButton" style={{ marginTop: 25 }}>Loading ... </button>}
                 <div className='backButtonWrapper' onClick={() => { navigate("/login") }} >
                     <FaArrowLeftLong className='backButtonIcon' />
-                    <span className='backButtonText'>Back to Login</span>
+                    <span className='backButtonText'>Back</span>
                 </div>
             </div>
         </div>

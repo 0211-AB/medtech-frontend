@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import { ReactComponent as Search } from '../../assets/search.svg'
 import NavBar from '../../components/NavBar/NavBar';
 import SideBar from '../../components/SideBar/SideBar';
 import Modal from '../../components/Modal/Modal';
 import { toast, ToastContainer } from 'react-toastify'
-import { changeAdminStatus, deleteUser, getAllUsers, updatedUserStatus } from '../../services/userService';
+import { changeAdminStatus, getAllUsers } from '../../services/userService';
 import UserTable from '../../components/Table/UserTable';
 import EditModal from '../../components/Modal/EditModal';
+import ConfirmModal from '../../components/Modal/ConfirmModal';
 
 const UserScreen = () => {
     const [isOpen, setIsOpen] = useState(false)
@@ -17,35 +17,8 @@ const UserScreen = () => {
     const [userData, setUserData] = useState(null)
     const [divHeight, setDivHeight] = useState(0);
     const [isEditOpen, setIsEditOpen] = useState(false)
-
-    const deleteUserByEmail = async (request) => {
-        try {
-            const res = await deleteUser(request)
-            if (res?.status === "success") {
-                setLoading(true)
-                toast(res.message)
-            } else
-                throw new Error("Failed To Update User Status");
-        } catch (e) {
-            console.log(e)
-            setLoading(true)
-            toast(e?.response?.data?.message ? e?.response?.data?.message : "An error occured. Please try again")
-        }
-    }
-
-    const updateStatus = async (request) => {
-        try {
-            const res = await updatedUserStatus(request)
-            if (res?.status === "success") {
-                setLoading(true)
-                toast("Updated User status sucessfully")
-            } else
-                throw new Error("Failed To Update User Status");
-        } catch (e) {
-            setLoading(true)
-            toast(e?.response?.data?.message ? e?.response?.data?.message : "An error occured. Please try again")
-        }
-    }
+    const [isConfirmOpen, setIsConfirmOpen] = useState(false)
+    const [functionData, setFunctionData] = useState(null)
 
     const updateAdminStatus = async (request) => {
         try {
@@ -66,6 +39,7 @@ const UserScreen = () => {
             setUsers(allUsers.filter((u) => u.Name.includes(searchKeyword) || u.email.includes(searchKeyword)))
         else
             setUsers(allUsers)
+        // eslint-disable-next-line
     }, [searchKeyword])
 
     useEffect(() => {
@@ -102,15 +76,12 @@ const UserScreen = () => {
         // eslint-disable-next-line
     }, [loading])
 
-    const toggleOpen = () => {
-        setIsOpen(!isOpen);
-    };
-
     return (
-        <div>
+        <>
             <ToastContainer />
             {isOpen && <Modal setIsOpen={setIsOpen} setLoadingUsers={setLoading} />}
             {isEditOpen && <EditModal setIsOpen={setIsEditOpen} setLoadingUsers={setLoading} data={userData} />}
+            {isConfirmOpen && <ConfirmModal setIsOpen={setIsConfirmOpen} setLoading={setLoading} functionData={functionData} setFunctionData={setFunctionData} />}
             <NavBar />
             <div style={{ display: 'grid', gridTemplateColumns: '80px 1fr', height: divHeight }}>
                 <SideBar />
@@ -133,13 +104,13 @@ const UserScreen = () => {
                                 <line class="pl__ball" stroke="url(#pl-grad2)" x1="100" y1="18" x2="100.01" y2="182" stroke-width="36" stroke-dasharray="1 165" stroke-linecap="round" />
                             </svg> </div> : <>
                             <div style={{ padding: '20px 50px', borderRadius: '10px' }}>
-                                <UserTable data={users} searchKeyWord={searchKeyword} setSearchKeyWord={setSearchKeyword} pending={loading} updateAdminStatus={updateAdminStatus} updateStatus={updateStatus} toggleOpen={() => { setIsEditOpen(!isEditOpen) }} setUserData={setUserData} deleteUser={deleteUserByEmail}/>
+                                <UserTable data={users} searchKeyWord={searchKeyword} setSearchKeyWord={setSearchKeyword} pending={loading} updateAdminStatus={updateAdminStatus} toggleOpenEdit={() => { setIsEditOpen(!isEditOpen) }} toggleOpen={() => { setIsOpen(!isOpen) }} setUserData={setUserData} setIsConfirmOpen={setIsConfirmOpen} setFunctionData={setFunctionData} />
                             </div>
                         </>
                     }
                 </div>
             </div>
-        </div>)
+        </>)
 }
 
 export default UserScreen

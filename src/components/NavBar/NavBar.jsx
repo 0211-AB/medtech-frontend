@@ -1,6 +1,5 @@
 import React, { useContext, useState } from 'react'
-import User from '../../assets/usericon.svg'
-import Extension from '../../assets/extension.svg'
+import { useNavigate } from 'react-router-dom'
 import LogOut from '../../assets/logout.svg'
 import { ReactComponent as Logo } from '../../assets/Group.svg'
 import './navBar.css'
@@ -9,6 +8,7 @@ import AuthContext from '../../store/AuthContext'
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const authCtx = useContext(AuthContext)
+  const navigate = useNavigate()
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
@@ -22,7 +22,7 @@ const NavBar = () => {
       display: 'flex',
       boxShadow: '0px 2px 18px 0px rgba(0, 0, 0, 0.1)',
     }}>
-      <Logo style={{ transform: 'scale(8)' }} />
+      {authCtx?.user?.organization ? <img src={authCtx?.user?.organization?.imageData} /> : <Logo style={{ transform: 'scale(8)' }} />}
       <div style={{
         display: 'flex',
         marginLeft: 'auto',
@@ -34,11 +34,8 @@ const NavBar = () => {
 
         {isOpen && (
           <div className="dropdown-content">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <img src={User} alt="My Account"></img>My Account
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <img src={Extension} alt="Download Extension"></img>Download Extension
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }} onClick={() => { navigate('/reset-password') }}>
+              <ion-icon name="key" style={{ fontSize: 20 }}></ion-icon>Reset Password
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }} onClick={authCtx.logout}>
               <img src={LogOut} alt="Log Out"></img>Log Out

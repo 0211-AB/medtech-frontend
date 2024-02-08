@@ -20,7 +20,7 @@ function msToTime(s) {
     return hrs + ' hrs ' + mins + ' mins ' + secs + ' secs ';
 }
 
-const Table = ({ data, pending, setTrancriptId, searchKeyWord, setSearchKeyWord, state, setState }) => {
+const Table = ({ data, pending, searchKeyWord, setSearchKeyWord, state, setState, setIsOpen,setFunctionData }) => {
     const navigate = useNavigate()
     const [showDatePicker, setShowDatePicker] = useState(false)
 
@@ -56,7 +56,7 @@ const Table = ({ data, pending, setTrancriptId, searchKeyWord, setSearchKeyWord,
         },
         {
             name: 'Action',
-            cell: (row) => <span style={{ color: '#6e75ff', fontWeight: 400, fontSize: 15, marginLeft: '3%' }} onClick={() => { setTrancriptId(row.id) }}>
+            cell: (row) => <span style={{ color: '#6e75ff', fontWeight: 400, fontSize: 15, marginLeft: '3%' }} onClick={() => { setIsOpen(true); setFunctionData({ type: "DELETE-TRANSCRIPT", data: { id: row.id } }) }}>
                 <ion-icon name="trash"></ion-icon>
             </span>
             ,

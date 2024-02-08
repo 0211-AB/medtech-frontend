@@ -8,6 +8,9 @@ import { useContext } from "react";
 import TranscriptDetailScreen from "./screens/TranscriptDetailScreen/TranscriptDetailScreen";
 import SettingsScreen from "./screens/SettingsScreen/SettingsScreen";
 import UserScreen from "./screens/UserScreen/UserScreen";
+import OrgScreen from "./screens/OrgScreen/OrgScreen";
+import UploadScreen from "./screens/UploadScreen/UploadScreen";
+import PromptScreen from "./screens/PromptScreen.js/PromptsScreen";
 
 function App() {
   const authCtx = useContext(AuthContext)
@@ -26,14 +29,32 @@ function App() {
           <Navigate to="/" />
         )
         } />
-        <Route path="/settings" element={authCtx.isLoggedIn === true && authCtx.isAdmin === true ? (
+        <Route path="/settings" element={authCtx.isLoggedIn === true && (authCtx.isAdmin || authCtx.isSuperAdmin) === true ? (
           <SettingsScreen />
         ) : (
           <Navigate to="/" />
         )
         } />
-        <Route path="/users" element={authCtx.isLoggedIn === true && authCtx.isAdmin === true ? (
+        <Route path="/users" element={authCtx.isLoggedIn === true && (authCtx.isAdmin || authCtx.isSuperAdmin) === true ? (
           <UserScreen />
+        ) : (
+          <Navigate to="/" />
+        )
+        } />
+        <Route path="/organizations" element={authCtx.isLoggedIn === true && authCtx.isSuperAdmin === true ? (
+          <OrgScreen />
+        ) : (
+          <Navigate to="/" />
+        )
+        } />
+        <Route path="/upload" element={authCtx.isLoggedIn === true ? (
+          <UploadScreen />
+        ) : (
+          <Navigate to="/" />
+        )
+        } />
+        <Route path="/prompt" element={authCtx.isLoggedIn === true && authCtx.isAdmin === true ? (
+          <PromptScreen />
         ) : (
           <Navigate to="/" />
         )

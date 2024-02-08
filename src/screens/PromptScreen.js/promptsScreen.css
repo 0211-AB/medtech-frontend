@@ -1,0 +1,89 @@
+.category-first-row {
+    display: flex;
+    -webkit-box-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.MuiFormControl-root {
+    border: 0;
+    margin: 0;
+    display: inline-flex;
+    padding: 0;
+    position: relative;
+    min-width: 0;
+    flex-direction: column;
+    vertical-align: top;
+}
+
+.floIoB {
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    width: 100%;
+}
+
+.floIoB div:not(:focus) {
+    background: rgba(0, 0, 0, 0.1);
+    color:rgba(0, 0, 0, 0.8);
+}
+
+.floIoB div {
+    display: flex;
+    flex-direction: row-reverse;
+    height: 48px;
+    padding: 8px 15px;
+    width: 100%;
+    background: gray;
+    border-radius: 4px;
+}
+
+.MuiFilledInput-root {
+    position: relative;
+    transition: background-color 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+}
+
+.floIoB div textarea {
+    margin-left: 10px;
+}
+
+.MuiInputBase-input:focus {
+    outline: 0;
+}
+
+.MuiFilledInput-inputMultiline {
+    padding: 0;
+}
+
+.MuiFilledInput-input {
+    padding: 27px 12px 10px;
+}
+
+.MuiInputBase-inputMultiline {
+    height: auto;
+    resize: none;
+    padding: 0;
+}
+
+.MuiInputBase-input {
+    font: inherit;
+    color: currentColor;
+    width: 100%;
+    border: 0;
+    height: 1.1876em;
+    margin: 0;
+    display: block;
+    padding: 6px 0 7px;
+    min-width: 0;
+    background: none;
+    box-sizing: content-box;
+    animation-name: mui-auto-fill-cancel;
+    letter-spacing: inherit;
+    animation-duration: 10ms;
+    -webkit-tap-highlight-color: transparent;
+}
