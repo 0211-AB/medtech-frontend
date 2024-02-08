@@ -3,7 +3,6 @@ import { toast, ToastContainer } from "react-toastify";
 import { updateOrganization } from "../../services/organizationService";
 
 const EditOrgModal = ({ setIsOpen, setLoadingOrgs, orgData }) => {
-    console.log(orgData)
     const [loading, setLoading] = useState(false)
     const [name, setName] = useState(orgData.organizationName);
     const [description, setDescription] = useState(orgData.organizationDescription);

@@ -19,7 +19,6 @@ const ConfirmModal = ({ setIsOpen, functionData, setLoading, setFunctionData }) 
             } else
                 throw new Error("Failed To Update User Status");
         } catch (e) {
-            console.log(e)
             setLoading(true)
             setIsOpen(false)
             toast(e?.response?.data?.message ? e?.response?.data?.message : "An error occured. Please try again")

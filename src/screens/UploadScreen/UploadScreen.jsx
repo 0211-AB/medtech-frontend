@@ -47,7 +47,6 @@ const UploadScreen = () => {
                                     updatedAt: Date.now()
                                 }, ...uploads])
                             } else if (error) {
-                                console.log(error)
                                 toast("Error while uploading file. Please try again !!!")
                             }
                         }
@@ -82,7 +81,6 @@ const UploadScreen = () => {
                                 updatedAt: Date.now()
                             }, ...uploads])
                         } else if (error) {
-                            console.log(error)
                             toast("Error while uploading file. Please try again !!!")
                         }
                     }
@@ -100,7 +98,6 @@ const UploadScreen = () => {
         const uploadData = async () => {
             try {
                 const res = await uploadMedia({ url: data.info.secure_url, data: data })
-                console.log(res)
                 if (res?.status === "success") {
                     setData(null)
                     setLoading(true)

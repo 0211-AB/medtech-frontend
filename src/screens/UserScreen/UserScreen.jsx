@@ -41,20 +41,7 @@ const UserScreen = () => {
             setUsers(allUsers)
         // eslint-disable-next-line
     }, [searchKeyword])
-
-    useEffect(() => {
-        function handleResize() {
-            const windowHeight = window.innerHeight;
-            setDivHeight(windowHeight - 77);
-        }
-
-        handleResize();
-        window.addEventListener('resize', handleResize);
-        return () => {
-            window.removeEventListener('resize', handleResize);
-        };
-    }, []);
-
+    
     useEffect(() => {
         if (loading === true) {
             const getUsers = async () => {
@@ -83,7 +70,7 @@ const UserScreen = () => {
             {isEditOpen && <EditModal setIsOpen={setIsEditOpen} setLoadingUsers={setLoading} data={userData} />}
             {isConfirmOpen && <ConfirmModal setIsOpen={setIsConfirmOpen} setLoading={setLoading} functionData={functionData} setFunctionData={setFunctionData} />}
             <NavBar />
-            <div style={{ display: 'grid', gridTemplateColumns: '80px 1fr', height: divHeight }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '80px 1fr',}}>
                 <SideBar />
                 <div style={{ flexGrow: '1', display: 'flex', flexDirection: 'column', minHeight: '100vh', background: '#F8F8F8' }}>
 

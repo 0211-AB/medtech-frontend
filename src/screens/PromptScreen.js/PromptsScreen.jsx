@@ -37,7 +37,6 @@ const PromptScreen = () => {
 
 
                 const res = await createPrompt(data)
-                console.log(res)
                 if (res?.status === "success") {
                     setData(null)
                     setLoading(true)
@@ -60,7 +59,6 @@ const PromptScreen = () => {
         const getPromptData = async () => {
             try {
                 const res = await getAllPrompts()
-                console.log(res)
                 if (res?.status === "success") {
                     setPrompts(res?.result ? res?.result : [])
                     setLoading(false)

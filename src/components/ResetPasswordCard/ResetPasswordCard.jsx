@@ -45,13 +45,11 @@ function ResetPasswordCard({ handleSuccessfulReset }) {
             const resetUserPassword = async () => {
                 try {
                     const res = await resetPassword({ newpassword: password })
-                    console.log(res)
                     if (res?.status === "success") {
                         handleSuccessfulReset(true)
                     } else
                         throw new Error("Resset Password Failed");
                 } catch (e) {
-                    console.log(e)
                     toast(e?.response?.data?.message ? e?.response?.data?.message : "An error occured. Please try again")
                 }
             }
@@ -106,7 +104,6 @@ function ResetPasswordCard({ handleSuccessfulReset }) {
                     </div>
                 </div>
                 {loading === false ? <button className="resetButton" style={{ marginTop: 25 }} onClick={() => {
-                    console.log('button clicked');
                     setLoading(true)
                 }}>Reset Password</button> : <button className="resetButton" style={{ marginTop: 25 }}>Loading ... </button>}
                 <div className='backButtonWrapper' onClick={() => { navigate("/login") }} >

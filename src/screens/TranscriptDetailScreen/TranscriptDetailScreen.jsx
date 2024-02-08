@@ -113,7 +113,6 @@ const TranscriptDetailScreen = () => {
                 } else
                     throw new Error("Summarizing Failed");
             } catch (e) {
-                console.log(e)
                 setFetchSummary(false)
                 toast(e?.response?.data?.message ? e?.response?.data?.message : "An error occured. Please try again")
             }

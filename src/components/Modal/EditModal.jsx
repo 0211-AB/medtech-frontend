@@ -5,7 +5,6 @@ import { toast, ToastContainer } from "react-toastify";
 import { updateUser } from "../../services/userService";
 
 const EditModal = ({ setIsOpen, setLoadingUsers, data }) => {
-    console.log(data)
     const [loading, setLoading] = useState(false)
     const [name, setName] = useState(data.Name);
     const [email, setEmail] = useState(data.email);

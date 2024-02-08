@@ -28,7 +28,7 @@ const SideBar = () => {
     }, [window.location])
 
     return (
-        <div style={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column', width: '80px', height: '100%', background: 'rgba(51, 66, 96, 1)' }}>
+        <div style={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column', width: '80px', background: 'rgba(51, 66, 96, 1)', minHeight: '100vh' }}>
             <div className={tab === 0 ? 'sideBarBox selectedBox' : 'sideBarBox'} onClick={() => { navigate('/') }}>
                 <img src={File} style={{ transform: 'scale(1.5)' }} alt="FileImg" />
             </div>
@@ -38,7 +38,7 @@ const SideBar = () => {
             </div>
 
             {authCtx.isAdmin === true && <div className={tab === 5 ? 'sideBarBox selectedBox' : 'sideBarBox'} onClick={() => { navigate('/prompt') }}>
-            <img src={OpenAI} style={{ transform: 'scale(0.2)' }} alt="FileImg" />
+                <img src={OpenAI} style={{ transform: 'scale(0.2)' }} alt="FileImg" />
             </div>}
 
             {(authCtx.isAdmin || authCtx.isSuperAdmin) === true && <div className={tab === 2 ? 'sideBarBox selectedBox' : 'sideBarBox'} onClick={() => { navigate('/users') }}>
