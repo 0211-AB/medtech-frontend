@@ -3,18 +3,11 @@ import DataTable from 'react-data-table-component';
 import moment from 'moment'
 import { deleteuploadMedia } from '../../services/uploadService';
 import { ToastContainer, toast } from 'react-toastify';
-
+import { useNavigate } from 'react-router-dom';
 
 const UploadTable = ({ data, pending, setLoading }) => {
     const [uploadId, setUploadId] = useState(null)
-    function exportTranscript(userInfo) {
-        const blob = new Blob([userInfo], { type: "text/plain" });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.download = "transcript.txt";
-        link.href = url;
-        link.click();
-    }
+    const navigate = useNavigate()
 
     useEffect(() => {
         const deleteMedia = async () => {
@@ -35,6 +28,7 @@ const UploadTable = ({ data, pending, setLoading }) => {
 
         if (uploadId !== null)
             deleteMedia()
+        // eslint-disable-next-line
     }, [uploadId])
 
     const columns = [
@@ -46,7 +40,7 @@ const UploadTable = ({ data, pending, setLoading }) => {
         },
         {
             name: 'Name',
-            cell: row => { return <div style={{display:'flex',justifyContent:'center',alignItems:'center'}}>{JSON.parse(row?.metaData)?.info?.original_filename + "." + JSON.parse(row?.metaData)?.info?.format} <a href={row.url} target="_blank" style={{ color: 'gray', fontSize: 20 }}><ion-icon name="attach-outline"></ion-icon></a></div> },
+            cell: row => { return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>{JSON.parse(row?.metaData)?.info?.original_filename + "." + JSON.parse(row?.metaData)?.info?.format} <a href={row.url} target="_blank" style={{ color: 'gray', fontSize: 20 }} rel="noreferrer" ><ion-icon name="attach-outline"></ion-icon></a></div> },
             center: true
         },
         {
@@ -56,11 +50,6 @@ const UploadTable = ({ data, pending, setLoading }) => {
                 const seconds = Math.floor(JSON.parse(row?.metaData)?.info?.duration - minutes * 60);
                 return minutes + " min  " + seconds + " sec"
             },
-            center: true
-        },
-        {
-            name: 'Transcript',
-            cell: row => { return row.transcript === "SCRIBE-AI-LOADING-TRANSCRIPT" ? <div class="scribe-transcript-loader"></div> : <ion-icon name="document-outline" style={{ color: 'gray', fontSize: 24 }} onClick={() => { exportTranscript(row.transcript) }}></ion-icon> },
             center: true
         },
         {
@@ -87,6 +76,7 @@ const UploadTable = ({ data, pending, setLoading }) => {
                 highlightOnHover
                 sortIcon={true}
                 progressPending={pending}
+                onRowClicked={(row, event) => { navigate(`/upload-details?${row.id}`, { state: row }) }}
             />
         </div>
     )

@@ -11,6 +11,7 @@ import UserScreen from "./screens/UserScreen/UserScreen";
 import OrgScreen from "./screens/OrgScreen/OrgScreen";
 import UploadScreen from "./screens/UploadScreen/UploadScreen";
 import PromptScreen from "./screens/PromptScreen.js/PromptsScreen";
+import UploadDetailScreen from "./screens/UploadDetailScreen/UploadDetailsScreen";
 
 function App() {
   const authCtx = useContext(AuthContext)
@@ -25,6 +26,12 @@ function App() {
         } />
         <Route path="/transcript-details" element={authCtx.isLoggedIn === true ? (
           <TranscriptDetailScreen />
+        ) : (
+          <Navigate to="/" />
+        )
+        } />
+        <Route path="/upload-details" element={authCtx.isLoggedIn === true ? (
+          <UploadDetailScreen />
         ) : (
           <Navigate to="/" />
         )

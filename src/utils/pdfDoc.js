@@ -10,9 +10,9 @@ function createDoc(data) {
                         width: 100
                     },
                     {
-                        text: 'Scribe.ai',
-                        style: 'header',
-                        alignment: 'right'
+                        text:"Scribe.AI",
+                        style:"header",
+                        alignment:"right"
                     }
                 ]
             },
@@ -23,8 +23,8 @@ function createDoc(data) {
                 columns: [
                     {
                         text: [
-                            { text: 'Transcript Recorded By: ', bold: true },
-                            { text: `${data.providername}\n` },
+                            { text: data?.providername?'Transcript Recorded By: ':'File Name : ', bold: true },
+                            { text: `${data?.providername?data?.providername:data.file}\n` },
                             { text: 'Date And Time: ', bold: true },
                             { text: `${data.time}\n` },
                         ]
@@ -45,11 +45,6 @@ function createDoc(data) {
             } : "",
             data.includeSummary ? data.summarizedTranscript : ""
         ],
-        footer: {
-            text: `Copyright : Scribe.ai `,
-            alignment: 'right',
-            margin: [0, 0, 50, 0]
-        },
         images: {
             rx: data.url,
         },

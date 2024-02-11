@@ -79,7 +79,7 @@ const EditPromptModal = ({ setIsOpen, setLoading, data }) => {
             />
 
             <div style={{display:'flex',justifyContent:'center',alignItems:'center'}}>
-              <button className="loginButton" style={{ border: 'none', cursor: 'pointer', padding: 0,width:'25%' }} onClick={() => { setNewData({ name, prompt, id: data.id }) }} >{newData === null ? 'OKAY' : <div class="scribe-transcript-loader"></div>}</button>
+              <button className="loginButton" style={{ border: 'none', cursor: 'pointer', padding: 0,width:'25%' }} onClick={() => { setNewData({ name, prompt, id: data.id }) }} >{newData === null ? 'OK' : <div class="scribe-transcript-loader"></div>}</button>
             </div>
           </div>
         </div>

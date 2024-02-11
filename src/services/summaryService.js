@@ -9,3 +9,12 @@ export const summarizeTranscript = async (request) => {
     );
     return response.data;
 };
+
+export const summarizeUpload = async (request) => {
+    let response = await axiosInstance.patch(
+        `/summarize/upload/${request.id}`,
+        request,
+        getAuthHeader()
+    );
+    return response.data;
+};

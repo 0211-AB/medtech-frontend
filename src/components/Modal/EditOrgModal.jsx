@@ -12,12 +12,11 @@ const EditOrgModal = ({ setIsOpen, setLoadingOrgs, orgData }) => {
         let file = e.target.files[0];
 
         if (file) {
-            let fileType = file.type;
             let fileSize = file.size;
 
-            if (fileSize > 2 * 1000000) {
+            if (fileSize > 5 * 1000000) {
                 alert(
-                    `File size is too large, please upload image of size less than 2MB.\nSelected File Size: ${fileSize / 1000000
+                    `File size is too large, please upload image of size less than 5MB.\nSelected File Size: ${fileSize / 1000000
                     }MB`
                 );
                 return;
@@ -126,7 +125,7 @@ const EditOrgModal = ({ setIsOpen, setLoadingOrgs, orgData }) => {
                                     <div className="passwordInputInnerWrapper">
                                         <input type="file" id="img" name="img" accept="image/png,image/jpeg" onChange={handleImageUpload} />
                                     </div>
-                                    {imageData !== null && <img src={imageData} style={{ height: 20, width: 'auto', marginRight: '10px' }} />}
+                                    {imageData !== null && <img src={imageData} style={{ height: 20, width: 'auto', marginRight: '10px' }} alt="Organization"/>}
                                 </div>
 
                                 <div>

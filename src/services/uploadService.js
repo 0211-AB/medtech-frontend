@@ -18,9 +18,26 @@ export const getuploadMedia = async () => {
     return response.data;
 };
 
+export const getUploadDetailByID = async (request) => {
+    let response = await axiosInstance.get(
+        `/upload/${request}`,
+        getAuthHeader()
+    );
+    return response.data;
+};
+
 export const deleteuploadMedia = async (request) => {
     let response = await axiosInstance.delete(
         `/upload/${request}`,
+        getAuthHeader()
+    );
+    return response.data;
+};
+
+export const highlightUpload = async (request) => {
+    let response = await axiosInstance.patch(
+        `/upload/highlight/${request.id}`,
+        request,
         getAuthHeader()
     );
     return response.data;

@@ -15,7 +15,6 @@ const UserScreen = () => {
     const [users, setUsers] = useState([])
     const [searchKeyword, setSearchKeyword] = useState("")
     const [userData, setUserData] = useState(null)
-    const [divHeight, setDivHeight] = useState(0);
     const [isEditOpen, setIsEditOpen] = useState(false)
     const [isConfirmOpen, setIsConfirmOpen] = useState(false)
     const [functionData, setFunctionData] = useState(null)

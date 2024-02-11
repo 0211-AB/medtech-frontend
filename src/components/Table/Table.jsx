@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import DataTable from 'react-data-table-component';
 import moment from 'moment'
 import Curogram from '../../assets/curogramIcon.png'
@@ -28,10 +28,10 @@ const Table = ({ data, pending, searchKeyWord, setSearchKeyWord, state, setState
         {
             name: "",
             cell: (row) => <span>
-                {row.meetingPlatform === "CUROGRAM" ? <img style={{ height: '20px' }} src={Curogram} data-tag="allowRowEvents" />
-                    : row.meetingPlatform === "MEET" ? <img style={{ height: '20px' }} src={Meet} data-tag="allowRowEvents" />
-                        : row.meetingPlatform === "ZOOM" ? <img style={{ height: '20px' }} src={Zoom} data-tag="allowRowEvents" />
-                            : <img style={{ height: '20px' }} src={Teams} data-tag="allowRowEvents" />}
+                {row.meetingPlatform === "CUROGRAM" ? <img style={{ height: '20px' }} src={Curogram} data-tag="allowRowEvents" alt="Curogram"/>
+                    : row.meetingPlatform === "MEET" ? <img style={{ height: '20px' }} src={Meet} data-tag="allowRowEvents" alt="Meet"/>
+                        : row.meetingPlatform === "ZOOM" ? <img style={{ height: '20px' }} src={Zoom} data-tag="allowRowEvents" alt="Zoom"/>
+                            : <img style={{ height: '20px' }} src={Teams} data-tag="allowRowEvents" alt="MSTeams"/>}
             </span>
             ,
             width: '56px',

@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useContext } from 'react'
-import './transcriptDetail.css'
 import { ReactComponent as Search } from '../../assets/search.svg'
 import Script from '../../assets/script.svg'
 import NavBar from '../../components/NavBar/NavBar';
@@ -9,26 +8,24 @@ import Highlighter from "react-highlight-words";
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { createDoc } from '../../utils/pdfDoc'
-import { getTransriptDetailByID, highlightTranscript } from '../../services/transcriptService';
+import { getUploadDetailByID,highlightUpload } from '../../services/uploadService';
 import { getAllPrompts } from '../../services/promptService';
 import moment from 'moment';
 import { ToastContainer, toast } from 'react-toastify';
-import Curogram from '../../assets/curogramIcon.png'
-import Meet from '../../assets/meetIcon.png'
-import Teams from '../../assets/teams.png'
-import Zoom from '../../assets/zoom.svg'
 import Tooltip from '../../components/ToolTip/ToolTip';
-import { summarizeTranscript } from '../../services/summaryService';
+import { summarizeUpload } from '../../services/summaryService';
 import AuthContext from '../../store/AuthContext';
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
-const TranscriptDetailScreen = () => {
+const UploadDetailScreen = () => {
+    const { state } = useLocation()
+    const metaData = JSON.parse(state?.metaData)?.info
     const navigate = useNavigate()
     const [searchWord, setSearchWord] = useState("")
     const [isOpen, setIsOpen] = useState(false)
     const [loading, setLoading] = useState(true)
-    const [messages, setMessages] = useState([])
+    const [messages, setMessages] = useState(state.transcript.split("\n\n"))
     const [prompts, setPrompts] = useState([])
     const [transcriptDetail, setTranscriptDetail] = useState({})
     const [toBeHighlighted, setToBeHighlighted] = useState(null)
@@ -37,15 +34,15 @@ const TranscriptDetailScreen = () => {
     const [includeSummary, setIncludeSummary] = useState(false)
     const location = useLocation()
     const authCtx = useContext(AuthContext)
-
+    
     useEffect(() => {
         const getTranscripts = async () => {
             try {
-                const res = await getTransriptDetailByID(location.search.substring(1))
+                const res = await getUploadDetailByID(location.search.substring(1))
                 if (res?.status === "success") {
                     setLoading(false)
                     setTranscriptDetail(res?.result)
-                    setMessages(res?.result?.rawTranscription ? JSON.parse(res?.result?.rawTranscription) : [])
+                    setMessages(res?.result?.transcript ? JSON.parse(res?.result?.transcript) : [])
                 } else
                     throw new Error("Fetching Failed");
             } catch (e) {
@@ -79,7 +76,7 @@ const TranscriptDetailScreen = () => {
     useEffect(() => {
         const updateTranscripts = async () => {
             try {
-                const res = await highlightTranscript({ id: location.search.substring(1), index: toBeHighlighted })
+                const res = await highlightUpload({ id: location.search.substring(1), index: toBeHighlighted })
                 if (res?.status === "success") {
                     setLoading(true)
                     setToBeHighlighted(null)
@@ -106,7 +103,7 @@ const TranscriptDetailScreen = () => {
                     return;
                 }
 
-                const res = await summarizeTranscript({ id: location.search.substring(1), prompt: selectedPrompt.promptText })
+                const res = await summarizeUpload({ id: location.search.substring(1), prompt: selectedPrompt.promptText })
                 if (res?.status === "success") {
                     setLoading(true)
                     setFetchSummary(false)
@@ -144,7 +141,7 @@ const TranscriptDetailScreen = () => {
                                 fontWeight: '600',
                                 textAlign: 'left',
                             }}>
-                                {transcriptDetail.meetingName}
+                                {metaData.original_filename}.{metaData.format}
                             </div>
                             <div style={{
                                 fontSize: '12px',
@@ -155,19 +152,11 @@ const TranscriptDetailScreen = () => {
                             }}>
 
                                 <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '2px' }}>
-                                    {transcriptDetail.meetingPlatform === "CUROGRAM" ? <img style={{ height: '20px' }} src={Curogram} alt="Curogram" data-tag="allowRowEvents" /> : transcriptDetail.meetingPlatform === "MEET" ? <img style={{ height: '20px' }} src={Meet} alt="Meet" data-tag="allowRowEvents" /> : transcriptDetail.meetingPlatform === "ZOOM" ? <img style={{ height: '20px' }} src={Zoom} data-tag="allowRowEvents" alt="Zoom" /> : <img style={{ height: '20px' }} src={Teams} data-tag="allowRowEvents" alt="Teams" />}
-                                </div>
-
-                                {transcriptDetail?.patientName !== 'Unknown' && <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1px' }}>
-                                    <ion-icon name="mail-outline"></ion-icon> {transcriptDetail?.patientName}
-                                </div>}
-
-                                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '2px' }}>
-                                    <ion-icon name="calendar-clear-outline"></ion-icon>  {moment(transcriptDetail.createdAt).format('dddd MMMM Do')}
+                                    <ion-icon name="calendar-clear-outline"></ion-icon>  {moment(metaData.created_at).format('dddd MMMM Do')}
                                 </div>
 
                                 <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '2px' }}>
-                                    <ion-icon name="time-outline"></ion-icon>  {moment(transcriptDetail.createdAt).format('h:mm a')}
+                                    <ion-icon name="time-outline"></ion-icon>  {moment(metaData.created_at).format('h:mm a')}
                                 </div>
 
                             </div>
@@ -193,13 +182,13 @@ const TranscriptDetailScreen = () => {
                             {isOpen && (
                                 <div className="exportDD">
                                     Export Transcript
-                                    <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', fontSize: 10, margin: '5px 0', width: '100%', gap: 8 }}><input type='checkbox' style={{ padding: 0, flex: 'none', borderRadius: 10, height: '10px', width: '20px', margin: '5px' }} className='summaryCheckbox' checked={includeSummary} onChange={() => { setIncludeSummary(!includeSummary && transcriptDetail.summarizedTranscription !== '') }}></input> Include Summary</div>
+                                    <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', fontSize: 10, margin: '5px 0', width: '100%', gap: 8 }}><input type='checkbox' style={{ padding: 0, flex: 'none', borderRadius: 10, height: '10px', width: '20px', margin: '5px' }} className='summaryCheckbox' checked={includeSummary} onChange={() => { setIncludeSummary(!includeSummary && transcriptDetail.summarizedTranscript !== '') }}></input> Include Summary</div>
                                     <p style={{ fontSize: '12px', color: '#333' }}>Select Format</p>
                                     <select>
                                         <option>PDF</option>
                                     </select>
                                     <button style={{ color: 'white', width: '100%', marginTop: '10px', padding: '5px 0', borderRadius: '5px', border: 'none', background: 'linear-gradient(90deg, #6E75FF 0%, #C66EFF 100%)' }} onClick={() => {
-                                        var doc = createDoc({ providername: transcriptDetail.providerName, name: transcriptDetail.patientName, email: transcriptDetail.patientEmail, time: moment(transcriptDetail.createdAt).format('LLLL'), messages, includeSummary, summarizedTranscript: transcriptDetail.summarizedTranscription, url: authCtx?.user?.organization?.imageData })
+                                        var doc = createDoc({ file: `${metaData.original_filename}.${metaData.format}`, time: moment(transcriptDetail.createdAt).format('LLLL'), messages, includeSummary, summarizedTranscript: transcriptDetail.summarizedTranscript, url: authCtx?.user?.organization?.imageData })
                                         pdfMake.createPdf(doc).open();
                                     }}>Export</button>
                                 </div>
@@ -249,7 +238,7 @@ const TranscriptDetailScreen = () => {
                                                 }
                                             }
 
-                                            await copyToClipboard(transcriptDetail.summarizedTranscription);
+                                            await copyToClipboard(transcriptDetail.summarizedTranscript);
                                             document.body.style.cursor = 'default'
                                         }}> <ion-icon name="copy-outline" style={{ fontSize: 16, color: 'gray' }}></ion-icon></button>
                                     </Tooltip>
@@ -272,7 +261,7 @@ const TranscriptDetailScreen = () => {
                                 <circle class="pl__ring" cx="100" cy="100" r="82" fill="none" stroke="url(#pl-grad1)" stroke-width="36" stroke-dasharray="0 257 1 257" stroke-dashoffset="0.01" stroke-linecap="round" transform="rotate(-90,100,100)" />
                                 <line class="pl__ball" stroke="url(#pl-grad2)" x1="100" y1="18" x2="100.01" y2="182" stroke-width="36" stroke-dasharray="1 165" stroke-linecap="round" />
                             </svg> </div> :
-                            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start',height:'90%' }} className='details-section'>
+                            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start', height: '90%' }} className='details-section'>
                                 <div style={{ minHeight: '510px',maxHeight:'100vh', overflowY: 'auto', padding: '30px', flex: 1, order: '-1' }}>
                                     {messages.map((m, index) => {
                                         if (toBeHighlighted === index)
@@ -294,6 +283,7 @@ const TranscriptDetailScreen = () => {
 
                                         return (
                                             <div className='message-container' style={{ background: m.highlight === true ? 'lightyellow' : 'white', borderRadius: '10px', position: 'relative' }}>
+                                            {console.log(m)}
                                                 {m.highlight === true ? <div className='highlightButton highlight-active'>
                                                     <Tooltip content="Double click to remove highlight !!" direction="left">
                                                         <ion-icon name="bookmarks" onDoubleClick={() => { setToBeHighlighted(index) }}></ion-icon>
@@ -328,26 +318,25 @@ const TranscriptDetailScreen = () => {
                                             </defs>
                                             <circle class="pl__ring" cx="100" cy="100" r="82" fill="none" stroke="url(#pl-grad1)" stroke-width="36" stroke-dasharray="0 257 1 257" stroke-dashoffset="0.01" stroke-linecap="round" transform="rotate(-90,100,100)" />
                                             <line class="pl__ball" stroke="url(#pl-grad2)" x1="100" y1="18" x2="100.01" y2="182" stroke-width="36" stroke-dasharray="1 165" stroke-linecap="round" />
-                                        </svg> </div> : transcriptDetail.isTranscriptionComplete === true ? <>
-                                            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 5, marginBottom: 15 }}>
-                                                <select style={{ width: 300, height: 30, outline: 'none', borderRadius: '5px', padding: '0 5px' }} onChange={(e) => { setSelectedPrompt(prompts[Number(e.target.value)]) }}>
-                                                    <option disabled value='' selected>
-                                                        Select A Prompt
+                                        </svg> </div> : <>
+                                        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 5, marginBottom: 15 }}>
+                                            <select style={{ width: 300, height: 30, outline: 'none', borderRadius: '5px', padding: '0 5px' }} onChange={(e) => { setSelectedPrompt(prompts[Number(e.target.value)]) }}>
+                                                <option disabled value='' selected>
+                                                    Select A Prompt
+                                                </option>
+                                                {prompts.map((prompt, index) => {
+                                                    return <option value={index} title={prompt.promptText}>
+                                                        {prompt.promptName}
                                                     </option>
-                                                    {prompts.map((prompt, index) => {
-                                                        return <option value={index} title={prompt.promptText}>
-                                                            {prompt.promptName}
-                                                        </option>
-                                                    })}
-                                                </select>
-                                                <div style={{ display: 'flex', width: '100px', borderRadius: 5, justifyContent: 'center', alignItems: 'center', cursor: 'pointer', fontSize: 14, height: 30, background: 'white', border: '1px solid rgba(110, 117, 255, 1)', color: 'rgba(110, 117, 255, 1)', }} onClick={() => { setFetchSummary(true) }}>
-                                                    Generate
-                                                </div>
+                                                })}
+                                            </select>
+                                            <div style={{ display: 'flex', width: '100px', borderRadius: 5, justifyContent: 'center', alignItems: 'center', cursor: 'pointer', fontSize: 14, height: 30, background: 'white', border: '1px solid rgba(110, 117, 255, 1)', color: 'rgba(110, 117, 255, 1)', }} onClick={() => { setFetchSummary(true) }}>
+                                                Generate
                                             </div>
+                                        </div>
 
-                                            <textarea style={{ width: '100%', height: transcriptDetail.summarizedTranscription === "" ? '0px' : '90vh', background: 'none', outline: 'none', border: 'none' }} disabled value={transcriptDetail.summarizedTranscription}></textarea>
-                                        </> :
-                                        <div style={{ display: 'flex', height: '40px', background: 'white', borderRadius: 5, justifyContent: 'center', alignItems: 'center', color: 'rgba(110, 117, 255, 1)', cursor: 'pointer', position: 'relative', fontWeight: '500' }}> Transcription Is Still In Progress . Summary can be generated once it is finished !!!</div>}
+                                        <textarea style={{ width: '100%', height: transcriptDetail.summarizedTranscript === "" ? '0px' : '90vh', background: 'none', outline: 'none', border: 'none' }} disabled value={transcriptDetail.summarizedTranscript}></textarea>
+                                    </>}
                                 </div>
                             </div>}
                     </div>
@@ -357,4 +346,4 @@ const TranscriptDetailScreen = () => {
     )
 }
 
-export default TranscriptDetailScreen
+export default UploadDetailScreen

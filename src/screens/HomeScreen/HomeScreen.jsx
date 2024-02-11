@@ -16,7 +16,7 @@ function HomeScreen() {
     const [transcriptId, setTrancriptId] = useState('')
     const [state, setState] = useState([{ startDate: null, endDate: null, key: 'selection' }]);
     const [isOpen, setIsOpen] = useState(false)
-    const [functionData,setFunctionData]=useState(null)
+    const [functionData, setFunctionData] = useState(null)
 
     useEffect(() => {
         if (searchKeyWord !== "")
@@ -31,6 +31,7 @@ function HomeScreen() {
             setMeetings(allMeetings)
         else
             setMeetings(allMeetings.filter((m) => m.createdAt >= moment(state[0].startDate).format() && m.createdAt <= moment(state[0].endDate).format()))
+        // eslint-disable-next-line
     }, [state])
 
     useEffect(() => {
@@ -78,7 +79,7 @@ function HomeScreen() {
     return (
         <>
             <ToastContainer />
-            {isOpen && <ConfirmModal isOpen={isOpen} setIsOpen={setIsOpen} functionData={functionData} setLoading={setLoading}/>}
+            {isOpen && <ConfirmModal isOpen={isOpen} setIsOpen={setIsOpen} functionData={functionData} setLoading={setLoading} />}
             <NavBar />
             <div style={{ display: 'grid', gridTemplateColumns: '80px 1fr' }}>
                 <SideBar />
@@ -101,7 +102,7 @@ function HomeScreen() {
                                 <line class="pl__ball" stroke="url(#pl-grad2)" x1="100" y1="18" x2="100.01" y2="182" stroke-width="36" stroke-dasharray="1 165" stroke-linecap="round" />
                             </svg> </div> : <>
                             <div style={{ padding: '20px 50px', borderRadius: '10px' }}>
-                                <Table data={meetings} pending={loading} setTrancriptId={setTrancriptId} searchKeyWord={searchKeyWord} setSearchKeyWord={setSearchKeyWord} state={state} setState={setState} setIsOpen={setIsOpen} setFunctionData={setFunctionData}/>
+                                <Table data={meetings} pending={loading} setTrancriptId={setTrancriptId} searchKeyWord={searchKeyWord} setSearchKeyWord={setSearchKeyWord} state={state} setState={setState} setIsOpen={setIsOpen} setFunctionData={setFunctionData} />
                             </div>
                         </>
                     }

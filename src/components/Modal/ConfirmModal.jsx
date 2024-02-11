@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { deleteUser, updatedUserStatus } from "../../services/userService";
 import { ToastContainer, toast } from "react-toastify";
 import { deleteTransriptByID } from "../../services/transcriptService";
-import { deletePrompt, deletePromptByID } from "../../services/promptService";
+import { deletePromptByID } from "../../services/promptService";
 
 const ConfirmModal = ({ setIsOpen, functionData, setLoading, setFunctionData }) => {
     const [confirm, setConfirm] = useState(false)
@@ -94,6 +94,8 @@ const ConfirmModal = ({ setIsOpen, functionData, setLoading, setFunctionData }) 
 
         if (functionData.type === "DELETE-PROMPT")
             deletePrompt(functionData.data)
+
+        // eslint-disable-next-line
     }, [confirm])
 
     return (
@@ -124,9 +126,9 @@ const ConfirmModal = ({ setIsOpen, functionData, setLoading, setFunctionData }) 
                         <div style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
                             <div style={{ height: '70px', width: '70px', borderRadius: '50%', border: '1px solid grey', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>  <ion-icon name="warning-outline" style={{ color: 'black', fontSize: 28 }}></ion-icon></div>
                         </div>
-                        <div style={{ flex: 4 }}>
+                        <div style={{ flex: 4,padding:'10px' }}>
                             <h3 style={{ color: 'black', }}>Warning !</h3>
-                            <span style={{ marginTop: 0, color: 'grey', fontWeight: 500, fontSize: '0.8rem' }}>{functionData?.type === 'DELETE' || functionData?.type === 'DELETE-TRANSCRIPT' || functionData?.type === 'DELETE-PROMPT' ? 'You will lose all of your data by deleting this. This action cannot be undone' : 'Are you sure you want to update status ?'}</span>
+                            <span style={{ marginTop: 0, color: 'grey', fontWeight: 500, fontSize: '0.8rem' }}>{functionData?.type === 'DELETE-TRANSCRIPT' || functionData?.type === 'DELETE-PROMPT' ? 'You will lose all of your data by deleting this. This action cannot be undone' : functionData?.type === 'DELETE' ? 'Be certain before you proceed. After deleting the account,it will first be deactivated for 30 days and after that the account will be permanently deleted and cannot be undone. You will lose all access to account data' : 'Are you sure you want to update status ?'}</span>
                             <div style={{ display: 'flex', width: '100%', justifyContent: 'flex-end', gap: 10 }}>
                                 <button className="deleteBtn" style={{ border: 'none', cursor: 'pointer' }} onClick={() => { setIsOpen(false); }} >Cancel</button>
 
