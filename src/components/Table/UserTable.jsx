@@ -5,17 +5,6 @@ import Tooltip from '../ToolTip/ToolTip';
 import './UserTable.css'
 import AuthContext from '../../store/AuthContext';
 
-const getRandomNumber = (limit) => {
-    return Math.floor(Math.random() * limit);
-};
-
-const setBackgroundColor = () => {
-    const h = getRandomNumber(360);
-    const randomColor = `hsl(${h}deg, 50%, 30%)`;
-
-    return randomColor;
-};
-
 
 const UserTable = ({ data, pending, setFunctionData, searchKeyWord, setSearchKeyWord, toggleOpen, setUserData, setIsConfirmOpen, toggleOpenEdit }) => {
     const authCtx = useContext(AuthContext)
@@ -23,7 +12,7 @@ const UserTable = ({ data, pending, setFunctionData, searchKeyWord, setSearchKey
         {
             name: 'Organization',
             cell: (row) => <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', textAlign: 'center', gap: 5 }}>
-                {row.organization?.imageData ? <img style={{ maxWidth: '80px', height: 'auto', maxHeight: '50px', borderRadius: '10px', flex: 1 }} src={row.organization?.imageData} /> : <p style={{ flex: 1 }}>{row?.organization?.organizationName ? row?.organization?.organizationName : "Scribe.Ai"}</p>}
+                {row.organization?.imageData ? <img style={{ maxWidth: '80px', height: 'auto', maxHeight: '50px', borderRadius: '10px', flex: 1 }} src={row.organization?.imageData} alt="Org"/> : <p style={{ flex: 1 }}>{row?.organization?.organizationName ? row?.organization?.organizationName : "Scribe.Ai"}</p>}
             </div>,
             center: true
         },
@@ -32,7 +21,7 @@ const UserTable = ({ data, pending, setFunctionData, searchKeyWord, setSearchKey
             selector: row => row.Name,
         },
         {
-            name: 'Email',
+            name: 'User Id',
             selector: row => row.email,
         },
         {

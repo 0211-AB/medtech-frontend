@@ -283,7 +283,7 @@ const UploadDetailScreen = () => {
 
                                         return (
                                             <div className='message-container' style={{ background: m.highlight === true ? 'lightyellow' : 'white', borderRadius: '10px', position: 'relative' }}>
-                                            {console.log(m)}
+                                            
                                                 {m.highlight === true ? <div className='highlightButton highlight-active'>
                                                     <Tooltip content="Double click to remove highlight !!" direction="left">
                                                         <ion-icon name="bookmarks" onDoubleClick={() => { setToBeHighlighted(index) }}></ion-icon>

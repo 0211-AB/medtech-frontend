@@ -79,7 +79,7 @@ function HomeScreen() {
     return (
         <>
             <ToastContainer />
-            {isOpen && <ConfirmModal isOpen={isOpen} setIsOpen={setIsOpen} functionData={functionData} setLoading={setLoading} />}
+            {isOpen && <ConfirmModal isOpen={isOpen} setIsOpen={setIsOpen} functionData={functionData} setLoading={setLoading} setFunctionData={setFunctionData}/>}
             <NavBar />
             <div style={{ display: 'grid', gridTemplateColumns: '80px 1fr' }}>
                 <SideBar />

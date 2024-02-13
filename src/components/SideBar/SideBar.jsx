@@ -12,7 +12,9 @@ const SideBar = () => {
     const authCtx = useContext(AuthContext)
     const navigate = useNavigate()
     useEffect(() => {
-        if (window.location.pathname === '/prompt')
+        if (window.location.pathname === '/record')
+            setTab(6)
+        else if (window.location.pathname === '/prompt')
             setTab(5)
         else if (window.location.pathname === '/upload')
             setTab(4)
@@ -35,6 +37,10 @@ const SideBar = () => {
 
             <div className={tab === 4 ? 'sideBarBox selectedBox' : 'sideBarBox'} onClick={() => { navigate('/upload') }}>
                 <ion-icon name="cloud-upload-outline" style={{ color: "white", fontSize: 30 }}></ion-icon>
+            </div>
+
+            <div className={tab === 6 ? 'sideBarBox selectedBox' : 'sideBarBox'} onClick={() => { navigate('/record') }}>
+                <ion-icon name="mic-outline" style={{ color: "white", fontSize: 30 }}></ion-icon>
             </div>
 
             {authCtx.isAdmin === true && <div className={tab === 5 ? 'sideBarBox selectedBox' : 'sideBarBox'} onClick={() => { navigate('/prompt') }}>

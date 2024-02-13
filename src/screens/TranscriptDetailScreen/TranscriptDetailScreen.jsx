@@ -17,6 +17,7 @@ import Curogram from '../../assets/curogramIcon.png'
 import Meet from '../../assets/meetIcon.png'
 import Teams from '../../assets/teams.png'
 import Zoom from '../../assets/zoom.svg'
+import ScribeAi from '../../assets/mic.png'
 import Tooltip from '../../components/ToolTip/ToolTip';
 import { summarizeTranscript } from '../../services/summaryService';
 import AuthContext from '../../store/AuthContext';
@@ -155,7 +156,7 @@ const TranscriptDetailScreen = () => {
                             }}>
 
                                 <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '2px' }}>
-                                    {transcriptDetail.meetingPlatform === "CUROGRAM" ? <img style={{ height: '20px' }} src={Curogram} alt="Curogram" data-tag="allowRowEvents" /> : transcriptDetail.meetingPlatform === "MEET" ? <img style={{ height: '20px' }} src={Meet} alt="Meet" data-tag="allowRowEvents" /> : transcriptDetail.meetingPlatform === "ZOOM" ? <img style={{ height: '20px' }} src={Zoom} data-tag="allowRowEvents" alt="Zoom" /> : <img style={{ height: '20px' }} src={Teams} data-tag="allowRowEvents" alt="Teams" />}
+                                    {transcriptDetail.meetingPlatform === "CUROGRAM" ? <img style={{ height: '20px' }} src={Curogram} alt="Curogram" data-tag="allowRowEvents" /> : transcriptDetail.meetingPlatform === "MEET" ? <img style={{ height: '20px' }} src={Meet} alt="Meet" data-tag="allowRowEvents" /> : transcriptDetail.meetingPlatform === "ZOOM" ? <img style={{ height: '20px' }} src={Zoom} data-tag="allowRowEvents" alt="Zoom" /> : transcriptDetail.meetingPlatform === "SCRIBE-AI" ? <img style={{ height: '20px' }} src={ScribeAi} data-tag="allowRowEvents" alt="ScribeAi" /> : <img style={{ height: '20px' }} src={Teams} data-tag="allowRowEvents" alt="MSTeams" />}
                                 </div>
 
                                 {transcriptDetail?.patientName !== 'Unknown' && <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1px' }}>
@@ -199,7 +200,7 @@ const TranscriptDetailScreen = () => {
                                         <option>PDF</option>
                                     </select>
                                     <button style={{ color: 'white', width: '100%', marginTop: '10px', padding: '5px 0', borderRadius: '5px', border: 'none', background: 'linear-gradient(90deg, #6E75FF 0%, #C66EFF 100%)' }} onClick={() => {
-                                        var doc = createDoc({ providername: transcriptDetail.providerName, name: transcriptDetail.patientName, email: transcriptDetail.patientEmail, time: moment(transcriptDetail.createdAt).format('LLLL'), messages, includeSummary, summarizedTranscript: transcriptDetail.summarizedTranscription, url: authCtx?.user?.organization?.imageData })
+                                        var doc = createDoc({ providername: transcriptDetail.providerName, name: transcriptDetail.patientName, time: moment(transcriptDetail.createdAt).format('LLLL'), messages, includeSummary, summarizedTranscript: transcriptDetail.summarizedTranscription, url: authCtx?.user?.organization?.imageData })
                                         pdfMake.createPdf(doc).open();
                                     }}>Export</button>
                                 </div>

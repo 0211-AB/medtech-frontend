@@ -18,13 +18,14 @@ function LoginCard() {
   useEffect(() => {
     if (authCtx.isLoggedIn)
       navigate('/')
+    // eslint-disable-next-line
   }, [authCtx])
 
   useEffect(() => {
     if (loading === true) {
 
       if (email === "") {
-        toast("Email is required")
+        toast("User ID is required")
         setLoading(false)
         return;
       }
@@ -70,7 +71,7 @@ function LoginCard() {
         <input
           type="text"
           value={email}
-          placeholder="Enter your email address"
+          placeholder="Enter your User ID"
           onChange={(e) => setEmail(e.target.value)}
           className='emailInput'
         />

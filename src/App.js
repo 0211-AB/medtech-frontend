@@ -12,6 +12,7 @@ import OrgScreen from "./screens/OrgScreen/OrgScreen";
 import UploadScreen from "./screens/UploadScreen/UploadScreen";
 import PromptScreen from "./screens/PromptScreen.js/PromptsScreen";
 import UploadDetailScreen from "./screens/UploadDetailScreen/UploadDetailsScreen";
+import RecordScreen from "./screens/RecordScreen/RecordScreen";
 
 function App() {
   const authCtx = useContext(AuthContext)
@@ -56,6 +57,12 @@ function App() {
         } />
         <Route path="/upload" element={authCtx.isLoggedIn === true ? (
           <UploadScreen />
+        ) : (
+          <Navigate to="/" />
+        )
+        } />
+        <Route path="/record" element={authCtx.isLoggedIn === true ? (
+          <RecordScreen />
         ) : (
           <Navigate to="/" />
         )

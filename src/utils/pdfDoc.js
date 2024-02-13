@@ -8,11 +8,6 @@ function createDoc(data) {
                         image: 'rx',
                         height: 40,
                         width: 100
-                    },
-                    {
-                        text:"Scribe.AI",
-                        style:"header",
-                        alignment:"right"
                     }
                 ]
             },
@@ -23,8 +18,8 @@ function createDoc(data) {
                 columns: [
                     {
                         text: [
-                            { text: data?.providername?'Transcript Recorded By: ':'File Name : ', bold: true },
-                            { text: `${data?.providername?data?.providername:data.file}\n` },
+                            { text: data?.providername ? 'Transcript Recorded By: ' : 'File Name : ', bold: true },
+                            { text: `${data?.providername ? data?.providername : data.file}\n` },
                             { text: 'Date And Time: ', bold: true },
                             { text: `${data.time}\n` },
                         ]

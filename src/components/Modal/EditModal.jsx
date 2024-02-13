@@ -24,13 +24,13 @@ const EditModal = ({ setIsOpen, setLoadingUsers, data }) => {
             }
 
             if (email === "") {
-                toast("Email is required")
+                toast("User Id is required")
                 setLoading(false)
                 return;
             }
 
-            if ((/^\S+@\S+\.\S+$/).test(email) === false) {
-                toast("Valid email is required")
+            if ((/^[0-9A-Za-z]{6,16}$/).test(email) === false) {
+                toast("User ID must be between 6 and 16 characters, alphanumeric only")
                 setLoading(false)
                 return;
             }
@@ -96,7 +96,7 @@ const EditModal = ({ setIsOpen, setLoadingUsers, data }) => {
                         <input
                             type="text"
                             value={email}
-                            placeholder="Enter your email address"
+                            placeholder="Enter your User Id"
                             onChange={(e) => setEmail(e.target.value)}
                             className='emailInput'
                         />
