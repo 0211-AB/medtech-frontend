@@ -12,6 +12,7 @@ import ConfirmModal from '../../components/Modal/ConfirmModal';
 
 const RecordScreen = () => {
     const [transcriptData, setTranscriptData] = useState(null)
+    const [name, setName] = useState('')
     const [isOpen, setIsOpen] = useState(false)
     const [functionData, setFunctionData] = useState(null)
     const authCtx = useContext(AuthContext)
@@ -55,6 +56,12 @@ const RecordScreen = () => {
     useEffect(() => {
         const addTranscript = async () => {
             try {
+                if (name === "") {
+                    toast("No Name has been provided")
+                    setTranscriptData(null)
+                    return;
+                }
+
                 if (transcript === "") {
                     toast("No Transcript has been generated")
                     setTranscriptData(null)
@@ -109,9 +116,9 @@ const RecordScreen = () => {
                                         <div class="controls">
                                             {recordingState === "idle" ? <button onClick={startRecording} class="btn start">
                                                 <ion-icon name="mic" style={{ color: 'white', fontSize: 24 }}></ion-icon></button> : recordingState === "paused" ? (
-                                                    <button onClick={resumeRecording} class="btn resume"><ion-icon name="play" style={{ color: 'white', fontSize: 24 }}></ion-icon></button>
+                                                    <button onClick={resumeRecording} class="btn resume"><ion-icon name="mic" style={{ color: 'white', fontSize: 24 }}></ion-icon></button>
                                                 ) : (
-                                                <button onClick={pauseRecording} class="btn pause"><ion-icon name="pause" style={{ color: 'white', fontSize: 24 }}></ion-icon></button>
+                                                <button onClick={pauseRecording} class="btn pause"><ion-icon name="mic-off" style={{ color: 'white', fontSize: 24 }}></ion-icon></button>
                                             )}
                                         </div>
                                         {recordingState !== "idle" && <div class="audio-info">
@@ -130,8 +137,10 @@ const RecordScreen = () => {
                             </div>
                             <div class="sc-9cd5de1e-1 ysmhg">
                                 <div class="sc-ffe87d3e-0 gBCnOO">
-                                    <div class="dropzone-main" aria-disabled="false" style={{ position: 'relative', height: '400px' }} >
-                                        <textarea style={{ height: '100%', width: '100%', outline: 'none', border: 'none', resize: 'none', padding: '10px', fontSize: 14 }} value={transcript === "" ? 'Your transcription will appear here ...' : transcript} onChange={(e) => { setTranscript(e.target.value) }}></textarea>
+                                    <input style={{ width: '100%', marginBottom: 10, border: '1px dashed rgb(110, 117, 255)', borderRadius: '4px' }} placeholder={'Enter the name for recording'} value={name} onChange={(e) => setName(e.target.value)}></input>
+                                    <div class="dropzone-main" aria-disabled="false" style={{ position: 'relative', height: '400px', maxWidth: '100%' }} >
+                                        <textarea style={{ height: '100%', width: '100%', outline: 'none', border: 'none', resize: 'none', padding: '10px', fontSize: 14 }}
+                                        placeholder='Your transcription will appear here ...' value={transcript} onChange={(e) => { setTranscript(e.target.value) }}></textarea>
                                     </div>
                                 </div>
                                 <br></br>
@@ -147,7 +156,7 @@ const RecordScreen = () => {
                                             rawTranscription: JSON.stringify([{ text: transcript, highlight: false }]),
                                             patientName: 'Unknown',
                                             patientDOB: new Date(),
-                                            meetingName: `${authCtx.user.name} - ${moment(new Date()).format("Do MMMM YYYY hh:mm:ss a")}`,
+                                            meetingName: name,
                                             meetingPlatform: 'SCRIBE-AI',
                                             summarizedTranscription: '',
                                             isTranscriptionComplete: true
