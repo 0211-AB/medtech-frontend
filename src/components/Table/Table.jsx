@@ -55,7 +55,7 @@ const Table = ({ data, pending, searchKeyWord, setSearchKeyWord, state, setState
             name: 'Duration',
             selector: row => msToTime(row.duration),
         },
-        dontShow !== true && {
+        {
             name: 'Action',
             cell: (row) => <span style={{ color: '#6e75ff', fontWeight: 400, fontSize: 15, marginLeft: '3%' }} onClick={() => { setIsOpen(true); setFunctionData({ type: "DELETE-TRANSCRIPT", data: { id: row.id } }) }}>
                 <ion-icon name="trash"></ion-icon>
