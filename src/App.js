@@ -67,7 +67,7 @@ function App() {
           <Navigate to="/" />
         )
         } />
-        <Route path="/prompt" element={authCtx.isLoggedIn === true && authCtx.isAdmin === true ? (
+        <Route path="/prompt" element={authCtx.isLoggedIn === true ? (
           <PromptScreen />
         ) : (
           <Navigate to="/" />

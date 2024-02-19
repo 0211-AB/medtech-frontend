@@ -28,8 +28,8 @@ const Modal = ({ setIsOpen, setLoadingUsers }) => {
                 return;
             }
 
-            if ((/^[0-9A-Za-z]{6,16}$/).test(email) === false) {
-                toast("User ID must be between 6 and 16 characters, alphanumeric only")
+            if (email.length<6) {
+                toast("User Id must be greater than 6 characters")
                 setLoading(false)
                 return;
             }

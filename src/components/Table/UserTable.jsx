@@ -12,7 +12,7 @@ const UserTable = ({ data, pending, setFunctionData, searchKeyWord, setSearchKey
         {
             name: 'Organization',
             cell: (row) => <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', textAlign: 'center', gap: 5 }}>
-                {row.organization?.imageData ? <img style={{ maxWidth: '80px', height: 'auto', maxHeight: '50px', borderRadius: '10px', flex: 1 }} src={row.organization?.imageData} alt="Org"/> : <p style={{ flex: 1 }}>{row?.organization?.organizationName ? row?.organization?.organizationName : "Scribe.Ai"}</p>}
+                {row.organization?.imageData ? <img style={{ maxWidth: '80px', height: 'auto', maxHeight: '50px', borderRadius: '10px', flex: 1 }} src={row.organization?.imageData} alt="Org" /> : <p style={{ flex: 1 }}>{row?.organization?.organizationName ? row?.organization?.organizationName : "Scribe.Ai"}</p>}
             </div>,
             center: true
         },
@@ -26,7 +26,7 @@ const UserTable = ({ data, pending, setFunctionData, searchKeyWord, setSearchKey
         },
         {
             name: 'Role',
-            selector: row => row.role,
+            selector: row => row.role === "Provider" ? "Provider / Scribe" : row.role,
         },
         {
             name: 'Status',
@@ -39,7 +39,17 @@ const UserTable = ({ data, pending, setFunctionData, searchKeyWord, setSearchKey
                     </div></div>
             },
             width: '200px',
-            center: true
+            center: true,
+            sortable: true,
+            sortFunction: function sortByIsActive(user1, user2) {
+                if (user1.isActive && !user2.isActive) {
+                    return 1;
+                } else if (!user1.isActive && user2.isActive) {
+                    return -1;
+                } else {
+                    return 0;
+                }
+            }
         },
         {
             name: 'Action',
@@ -92,7 +102,7 @@ const UserTable = ({ data, pending, setFunctionData, searchKeyWord, setSearchKey
                 data={data}
                 pointerOnHover
                 highlightOnHover
-                sortIcon={true}
+                sortIcon={<ion-icon name="caret-down-outline" style={{ fontSize: 12, position: 'absolute', top: '40%' }}></ion-icon>}
                 progressPending={pending}
                 onRowClicked={() => { }}
             />

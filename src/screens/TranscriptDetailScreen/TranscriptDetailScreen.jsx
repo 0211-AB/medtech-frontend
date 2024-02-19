@@ -82,12 +82,11 @@ const TranscriptDetailScreen = () => {
             try {
                 const res = await highlightTranscript({ id: location.search.substring(1), index: toBeHighlighted })
                 if (res?.status === "success") {
-                    setLoading(true)
                     setToBeHighlighted(null)
                 } else
                     throw new Error("Fetching Failed");
             } catch (e) {
-                setLoading(false)
+                setLoading(true)
                 setToBeHighlighted(null)
                 toast(e?.response?.data?.message ? e?.response?.data?.message : "An error occured. Please try again")
             }
@@ -273,35 +272,18 @@ const TranscriptDetailScreen = () => {
                                 <circle class="pl__ring" cx="100" cy="100" r="82" fill="none" stroke="url(#pl-grad1)" stroke-width="36" stroke-dasharray="0 257 1 257" stroke-dashoffset="0.01" stroke-linecap="round" transform="rotate(-90,100,100)" />
                                 <line class="pl__ball" stroke="url(#pl-grad2)" x1="100" y1="18" x2="100.01" y2="182" stroke-width="36" stroke-dasharray="1 165" stroke-linecap="round" />
                             </svg> </div> :
-                            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start',height:'90%' }} className='details-section'>
-                                <div style={{ minHeight: '510px',maxHeight:'100vh', overflowY: 'auto', padding: '30px', flex: 1, order: '-1' }}>
+                            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start', height: '90%' }} className='details-section'>
+                                <div style={{ minHeight: '510px', maxHeight: '100vh', overflowY: 'auto', padding: '30px', flex: 1, order: '-1' }}>
                                     {messages.map((m, index) => {
-                                        if (toBeHighlighted === index)
-                                            return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', margin: '10px 0' }}>
-                                                <svg class="pl2" viewBox="0 0 200 200" width="20" height="20" xmlns="http://www.w3.org/2000/svg">
-                                                    <defs>
-                                                        <linearGradient id="pl-grad1" x1="1" y1="0.5" x2="0" y2="0.5">
-                                                            <stop offset="0%" stop-color="hsl(313,90%,55%)" />
-                                                            <stop offset="100%" stop-color="hsl(223,90%,55%)" />
-                                                        </linearGradient>
-                                                        <linearGradient id="pl-grad2" x1="0" y1="0" x2="0" y2="1">
-                                                            <stop offset="0%" stop-color="hsl(313,90%,55%)" />
-                                                            <stop offset="100%" stop-color="hsl(223,90%,55%)" />
-                                                        </linearGradient>
-                                                    </defs>
-                                                    <circle class="pl__ring" cx="100" cy="100" r="82" fill="none" stroke="url(#pl-grad1)" stroke-width="36" stroke-dasharray="0 257 1 257" stroke-dashoffset="0.01" stroke-linecap="round" transform="rotate(-90,100,100)" />
-                                                    <line class="pl__ball" stroke="url(#pl-grad2)" x1="100" y1="18" x2="100.01" y2="182" stroke-width="36" stroke-dasharray="1 165" stroke-linecap="round" />
-                                                </svg> </div>
-
                                         return (
                                             <div className='message-container' style={{ background: m.highlight === true ? 'lightyellow' : 'white', borderRadius: '10px', position: 'relative' }}>
                                                 {m.highlight === true ? <div className='highlightButton highlight-active'>
                                                     <Tooltip content="Double click to remove highlight !!" direction="left">
-                                                        <ion-icon name="bookmarks" onDoubleClick={() => { setToBeHighlighted(index) }}></ion-icon>
+                                                        <ion-icon name="bookmarks" onDoubleClick={() => { setMessages(prevMessages => prevMessages.map((m, idx) => { if (idx === index) m.highlight = false; return m })); setToBeHighlighted(index) }}></ion-icon>
                                                     </Tooltip>
                                                 </div> : <div className='highlightButton'>
                                                     <Tooltip content="Double click to highlight !!" direction="left">
-                                                        <ion-icon name="bookmarks-outline" onDoubleClick={() => { setToBeHighlighted(index) }}></ion-icon>
+                                                        <ion-icon name="bookmarks-outline" onDoubleClick={() => { setMessages(prevMessages => prevMessages.map((m, idx) => { if (idx === index) m.highlight = true; return m })); setToBeHighlighted(index) }}></ion-icon>
                                                     </Tooltip>
                                                 </div>}
                                                 <Highlighter

@@ -29,7 +29,7 @@ const PromptScreen = () => {
                     return;
                 }
 
-                if (prompt === "") {
+                if (promptText === "") {
                     toast("Prompt is required")
                     setData(null)
                     return;

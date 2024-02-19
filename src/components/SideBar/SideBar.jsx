@@ -43,9 +43,9 @@ const SideBar = () => {
                 <ion-icon name="mic-outline" style={{ color: "white", fontSize: 30 }}></ion-icon>
             </div>
 
-            {authCtx.isAdmin === true && <div className={tab === 5 ? 'sideBarBox selectedBox' : 'sideBarBox'} onClick={() => { navigate('/prompt') }}>
+            <div className={tab === 5 ? 'sideBarBox selectedBox' : 'sideBarBox'} onClick={() => { navigate('/prompt') }}>
                 <img src={OpenAI} style={{ transform: 'scale(0.2)' }} alt="FileImg" />
-            </div>}
+            </div>
 
             {(authCtx.isAdmin || authCtx.isSuperAdmin) === true && <div className={tab === 2 ? 'sideBarBox selectedBox' : 'sideBarBox'} onClick={() => { navigate('/users') }}>
                 <img src={User} style={{ transform: 'scale(1.5)' }} alt="UserImg" />

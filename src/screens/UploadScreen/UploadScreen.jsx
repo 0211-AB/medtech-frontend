@@ -42,7 +42,7 @@ const UploadScreen = () => {
                                     url: result.info.secure_url,
                                     metaData: JSON.stringify(result),
                                     userId: "user_001",
-                                    transcript: "SCRIBE-AI-LOADING-TRANSCRIPT",
+                                    transcript: "TRANSCRIPT IS CURRENTLY BEING GENERATED !!!",
                                     createdAt: Date.now(),
                                     updatedAt: Date.now()
                                 }, ...uploads])
@@ -76,7 +76,7 @@ const UploadScreen = () => {
                                 url: result.info.secure_url,
                                 metaData: JSON.stringify(result),
                                 userId: "user_001",
-                                transcript: "SCRIBE-AI-LOADING-TRANSCRIPT",
+                                transcript: "TRANSCRIPT IS CURRENTLY BEING GENERATED !!!",
                                 createdAt: Date.now(),
                                 updatedAt: Date.now()
                             }, ...uploads])

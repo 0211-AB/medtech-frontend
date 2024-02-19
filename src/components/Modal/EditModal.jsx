@@ -29,8 +29,8 @@ const EditModal = ({ setIsOpen, setLoadingUsers, data }) => {
                 return;
             }
 
-            if ((/^[0-9A-Za-z]{6,16}$/).test(email) === false) {
-                toast("User ID must be between 6 and 16 characters, alphanumeric only")
+            if (email.length<6) {
+                toast("User Id must be greater than 6 characters")
                 setLoading(false)
                 return;
             }
@@ -141,7 +141,7 @@ const EditModal = ({ setIsOpen, setLoadingUsers, data }) => {
                         <span className="title">Select Role </span>
                         <select style={{ padding: '10px', outline: 'none', border: '1px solid #EAECF0', color: '#ADB5BD', borderRadius: '10px' }} onChange={(e) => { setRole(e.target.value) }}>
                             <option disabled>Choose Role</option>
-                            <option selected={role === 'Provider'} value={'Provider'}>Provider</option>
+                            <option selected={role === 'Provider'} value={'Provider'}>Provider / Scribe</option>
                             <option selected={role === 'Admin'} value={'Admin'}>Admin</option>
                         </select>
 
