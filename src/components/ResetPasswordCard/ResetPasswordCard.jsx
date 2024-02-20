@@ -47,15 +47,16 @@ function ResetPasswordCard({ handleSuccessfulReset }) {
                     const res = await resetPassword({ newpassword: password })
                     if (res?.status === "success") {
                         handleSuccessfulReset(true)
+                        setLoading(false)
                     } else
                         throw new Error("Resset Password Failed");
                 } catch (e) {
+                    setLoading(false)
                     toast(e?.response?.data?.message ? e?.response?.data?.message : "An error occured. Please try again")
                 }
             }
 
             resetUserPassword()
-            setLoading(false)
         }
 
         // eslint-disable-next-line

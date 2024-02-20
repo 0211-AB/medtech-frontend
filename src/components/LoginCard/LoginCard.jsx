@@ -40,6 +40,7 @@ function LoginCard() {
         try {
           const res = await signIn({ email, password })
           if (res?.status === "success") {
+            setLoading(false)
             authCtx.login(res.data.token, res.data.role === "Admin", res.data.role === "SuperAdmin", { name: res.data.name, email: res.data.email, organization: res.data.organization })
             if (res.data.hasResetPassword === false)
               navigate('/reset-password')
@@ -48,12 +49,12 @@ function LoginCard() {
           } else
             throw new Error("Sign Up Failed");
         } catch (e) {
+          setLoading(false)
           toast(e?.response?.data?.message ? e?.response?.data?.message : "An error occured. Please try again")
         }
       }
 
       signInUser()
-      setLoading(false)
     }
     // eslint-disable-next-line
   }, [loading])
@@ -96,7 +97,7 @@ function LoginCard() {
 
         {loading === false ? <div>
           <button className="loginButton" onClick={() => { setLoading(true); }} >Login</button>
-        </div> : <button className="loginButton">Loading ... </button>}
+        </div> : <div><button className="loginButton">Loading ... </button></div>}
 
         <div></div>
       </div>
