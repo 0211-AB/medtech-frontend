@@ -147,7 +147,7 @@ const EditModal = ({ setIsOpen, setLoadingUsers, data }) => {
                         </select>
 
                         <div>
-                            <button className="loginButton" style={{ border: 'none', cursor: 'pointer' }} onClick={() => { setLoading(true) }} >Edit Details</button>
+                        {loading === true ? <button className="loginButton" style={{ border: 'none' }} >Loading ...</button> :  <button className="loginButton" style={{ border: 'none', cursor: 'pointer' }} onClick={() => { setLoading(true) }} >Edit Details</button>}
                         </div>
                     </div>
                 </div>

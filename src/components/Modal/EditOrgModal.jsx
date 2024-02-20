@@ -130,7 +130,7 @@ const EditOrgModal = ({ setIsOpen, setLoadingOrgs, orgData }) => {
                                 </div>
 
                                 <div>
-                                    <button className="loginButton" style={{ border: 'none', cursor: 'pointer' }} onClick={() => { setLoading(true) }} >Edit Organization</button>
+                                    {loading === true ? <button className="loginButton" style={{ border: 'none' }} >Loading ...</button> : <button className="loginButton" style={{ border: 'none', cursor: 'pointer' }} onClick={() => { setLoading(true) }} >Edit Organization</button>}
                                 </div>
                             </>}
                     </div>

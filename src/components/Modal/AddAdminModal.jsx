@@ -28,14 +28,13 @@ const AddAdminModal = ({ setIsOpen, setLoadingUsers, orgData }) => {
                 return;
             }
 
-            if(email.length<6)
-            {
+            if (email.length < 6) {
                 toast("User Id must be greater than 6 characters")
                 setLoading(false)
                 return;
             }
 
-            
+
             if (password === "") {
                 toast("Password is required")
                 setLoading(false)
@@ -163,7 +162,7 @@ const AddAdminModal = ({ setIsOpen, setLoadingUsers, orgData }) => {
                                 </div>
 
                                 <div>
-                                    <button className="loginButton" style={{ border: 'none', cursor: 'pointer' }} onClick={() => { setLoading(true) }} >Add Admin To {orgData.organizationName}</button>
+                                    {loading === true ? <button className="loginButton" style={{ border: 'none' }} >Loading ...</button> : <button className="loginButton" style={{ border: 'none', cursor: 'pointer' }} onClick={() => { setLoading(true) }} >Add Admin To {orgData.organizationName}</button>}
                                 </div>
                             </>}
                     </div>

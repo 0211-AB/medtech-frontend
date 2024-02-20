@@ -28,7 +28,7 @@ const Modal = ({ setIsOpen, setLoadingUsers }) => {
                 return;
             }
 
-            if (email.length<6) {
+            if (email.length < 6) {
                 toast("User Id must be greater than 6 characters")
                 setLoading(false)
                 return;
@@ -145,7 +145,7 @@ const Modal = ({ setIsOpen, setLoadingUsers }) => {
                         </div>
 
                         <div>
-                            <button className="loginButton" style={{ border: 'none', cursor: 'pointer' }} onClick={() => { setLoading(true) }} >Add Member</button>
+                            {loading === true ? <button className="loginButton" style={{ border: 'none' }} >Loading ...</button> : <button className="loginButton" style={{ border: 'none', cursor: 'pointer' }} onClick={() => { setLoading(true) }} >Add Member</button>}
                         </div>
                     </div>
                 </div>

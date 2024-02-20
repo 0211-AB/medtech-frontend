@@ -129,7 +129,8 @@ const AddOrgModal = ({ setIsOpen, setLoadingOrgs }) => {
                                 </div>
 
                                 <div>
-                                    <button className="loginButton" style={{ border: 'none', cursor: 'pointer' }} onClick={() => { setLoading(true) }} >Add Organization</button>
+                                    {loading === true ? <button className="loginButton" style={{ border: 'none' }} >Loading ...</button> : <button className="loginButton" style={{ border: 'none', cursor: 'pointer' }} onClick={() => { setLoading(true) }} >Add Organization</button>}
+
                                 </div>
                             </>}
                     </div>
