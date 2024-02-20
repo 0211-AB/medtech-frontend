@@ -60,15 +60,16 @@ const Modal = ({ setIsOpen, setLoadingUsers }) => {
                         toast('New User Added Sucessfully')
                         setIsOpen(false)
                         setLoadingUsers(true)
+                        setLoading(false)
                     } else
                         throw new Error("User Add Failed");
                 } catch (e) {
+                    setLoading(false)
                     toast(e?.response?.data?.message ? e?.response?.data?.message : "An error occured. Please try again")
                 }
             }
 
             signInUser()
-            setLoading(false)
         }
         // eslint-disable-next-line
     }, [loading])

@@ -55,15 +55,16 @@ const EditModal = ({ setIsOpen, setLoadingUsers, data }) => {
                         toast('Updated User Sucessfully')
                         setIsOpen(false)
                         setLoadingUsers(true)
+                        setLoading(false)
                     } else
                         throw new Error("User Update Failed");
                 } catch (e) {
+                    setLoading(false)
                     toast(e?.response?.data?.message ? e?.response?.data?.message : "An error occured. Please try again")
                 }
             }
 
             updateUserDetails()
-            setLoading(false)
         }
         // eslint-disable-next-line
     }, [loading])

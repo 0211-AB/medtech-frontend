@@ -40,7 +40,7 @@ const UserScreen = () => {
             setUsers(allUsers)
         // eslint-disable-next-line
     }, [searchKeyword])
-    
+
     useEffect(() => {
         if (loading === true) {
             const getUsers = async () => {
@@ -49,15 +49,16 @@ const UserScreen = () => {
                     if (res?.status === "success") {
                         setUsers(res.results)
                         setAllUsers(res.results)
+                        setLoading(false)
                     } else
                         throw new Error("Failed To Fetch All Users");
                 } catch (e) {
+                    setLoading(false)
                     setUsers([])
                     toast(e?.response?.data?.message ? e?.response?.data?.message : "An error occured. Please try again")
                 }
             }
             getUsers()
-            setLoading(false)
         }
         // eslint-disable-next-line
     }, [loading])
@@ -69,7 +70,7 @@ const UserScreen = () => {
             {isEditOpen && <EditModal setIsOpen={setIsEditOpen} setLoadingUsers={setLoading} data={userData} />}
             {isConfirmOpen && <ConfirmModal setIsOpen={setIsConfirmOpen} setLoading={setLoading} functionData={functionData} setFunctionData={setFunctionData} />}
             <NavBar />
-            <div style={{ display: 'grid', gridTemplateColumns: '80px 1fr',}}>
+            <div style={{ display: 'grid', gridTemplateColumns: '80px 1fr', }}>
                 <SideBar />
                 <div style={{ flexGrow: '1', display: 'flex', flexDirection: 'column', minHeight: '100vh', background: '#F8F8F8' }}>
 

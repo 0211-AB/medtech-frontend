@@ -57,15 +57,16 @@ const EditOrgModal = ({ setIsOpen, setLoadingOrgs, orgData }) => {
                         toast('Organization Details Updated Sucessfully')
                         setIsOpen(false)
                         setLoadingOrgs(true)
+                        setLoading(false)
                     } else
                         throw new Error("Organization Update Failed");
                 } catch (e) {
+                    setLoading(false)
                     toast(e?.response?.data?.message ? e?.response?.data?.message : "An error occured. Please try again")
                 }
             }
 
             createOrg()
-            setLoading(false)
         }
         // eslint-disable-next-line
     }, [loading])
@@ -125,7 +126,7 @@ const EditOrgModal = ({ setIsOpen, setLoadingOrgs, orgData }) => {
                                     <div className="passwordInputInnerWrapper">
                                         <input type="file" id="img" name="img" accept="image/png,image/jpeg" onChange={handleImageUpload} />
                                     </div>
-                                    {imageData !== null && <img src={imageData} style={{ height: 20, width: 'auto', marginRight: '10px' }} alt="Organization"/>}
+                                    {imageData !== null && <img src={imageData} style={{ height: 20, width: 'auto', marginRight: '10px' }} alt="Organization" />}
                                 </div>
 
                                 <div>

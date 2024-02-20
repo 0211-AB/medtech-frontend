@@ -60,12 +60,12 @@ const AddOrgModal = ({ setIsOpen, setLoadingOrgs }) => {
                     } else
                         throw new Error("Organization Add Failed");
                 } catch (e) {
+                    setLoading(false)
                     toast(e?.response?.data?.message ? e?.response?.data?.message : "An error occured. Please try again")
                 }
             }
 
             createOrg()
-            setLoading(false)
         }
         // eslint-disable-next-line
     }, [loading])
